@@ -1,6 +1,5 @@
 /******************************************************************************
-cs2123p5Driver.c by Larry Clark  (For groups, place group name here and
-list your names.  For individuals, you will not be changing this.
+cs2123p5Driver.c by TeamOmega [Lane Burris, Farhad Jijina, Joshua Weigand]
 Purpose:
     This program manages a Price Menu for the Klunker Car Company  using a
     binary tree to represent the information.  It uses input commands to 
@@ -39,10 +38,13 @@ Input:
 
     PRINT ONE szId 
         prints one item 
+ 
     QUOTE BEGIN 
         starts a quote selection.  determineQuote isn't called.
-    QUOTE OPTION iLevel szOptionId iSelection
-    …
+ 
+    QUOTE OPTION
+        iLevel szOptionId iSelection
+ 
     QUOTE END
         invokes determineQUote passing the quote selction information.
         Example:
@@ -156,7 +158,7 @@ Returns:
 **************************************************************************/
 QuoteSelection newQuoteSelection()
 {
-    QuoteSelection  quote= (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
+    QuoteSelection quote = (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
     if (quote == NULL)
         ErrExit(ERR_ALGORITHM, "malloc allocation error for QuoteSelectionImp");
     quote->iQuoteItemCnt = 0;
