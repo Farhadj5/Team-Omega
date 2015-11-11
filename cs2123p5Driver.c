@@ -97,6 +97,7 @@ Notes:
 #include <stdlib.h>
 #include "cs2123p5.h"
 
+
 int main()
 {
     Tree tree = newTree();                          // Binary tree
@@ -114,6 +115,7 @@ int main()
         if (szInputBuffer[0] == '*'  || szInputBuffer[0] == '\0')
             continue;                               // Command is a comment so skip it
 
+        //read in file
         processCommand(tree, quoteSelection, szInputBuffer);
     }
 
@@ -123,6 +125,73 @@ int main()
     fclose(stdin);
     printf("\n");
     return 0;
+}
+
+void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
+{
+    char szToken[MAX_TOKEN_SIZE+1];
+    char szId[MAX_ID_SIZE];
+    char szSubordinateToId[MAX_ID_SIZE];
+    char szOptionId[MAX_ID_SIZE];
+    char cCostInd;
+    double dCost;
+    char szTitle[MAX_LINE_SIZE];            //might use something other than maxlinesize
+
+    //Gets first word in input
+    pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+
+    //Set of if statmenets to check the command
+    if (strcmp(szToken,"DEFINE")==0)
+    {
+        //checks the next word after the command
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+
+        //check to see if it is OPTION or VALUE
+        if (strcmp(szToken,"VALUE")==0)
+        {
+            sscanf(pszInput, "%s %s %s %lf %s"
+                    ,szId
+                    ,szOptionId
+                    ,&cCostInd
+                    ,&dCost
+                    ,szTitle);
+            //use findID to find where to insert node
+        }
+        else if (strcmp(szToken,"OPTION")==0)
+        {
+            sscanf(pszInput, "%s %s %s"
+                    ,szId
+                    ,szSubordinateToId
+                    ,szTitle);
+            //use findID to find where to insert node
+        }
+
+    }
+    else if (strcmp(szToken,"PRINT")==0)
+    {
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        
+        //if the command is to print all
+        if (strcmp(szToken,"ALL")==0)
+        {
+            //Pretty print
+        }
+        //if the command is print one
+        else
+        {
+            //probably where findID comes into play
+        }
+    }
+    else if (strcmp(szToken,"QUOTE")==0)
+    {
+        //3 cases, BEGIN, OPTION,END
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+    }
+    else if (strcmp(szToken,"DELETE")==0)
+    {
+        
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+    }
 }
 /******************** newTree **************************************
   Tree newTree()
@@ -144,6 +213,7 @@ Tree newTree()
     tree->pRoot = NULL;
     return tree;
 }
+
 /******************** newQuoteSelection **************************************
   QuoteSelection newQuoteSelection()
 Purpose:
