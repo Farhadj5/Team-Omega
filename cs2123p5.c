@@ -50,8 +50,18 @@
  **************************************************************************/
 NodeT *findId(NodeT *p, char szId[])
 {
-    
-    
+    //base case
+    if (p == NULL)
+        return NULL;
+
+    //szId is found
+    if (strcmp(p->element.szId,szId)==0)
+        return p;
+
+    //iterate through the rest of the tree
+    findId(p->pChild, szId);
+    findId(p->pSibling, szId);
+    return NULL;
 }
 
 /***************************** findParent *********************************
@@ -65,7 +75,24 @@ NodeT *findId(NodeT *p, char szId[])
  **************************************************************************/
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
-    
+    //base case
+    if (p==NULL)
+        return NULL;
+
+    //check to see if found
+    if (strcmp(p->element.szId,pkid->element.szId)==0)
+        return pParent;
+
+    //check if there is no sibling
+    if (p->pSibling == NULL)
+        findParent(p,p->pChild,pkid);
+
+    //if there is a sibling
+    else
+        findParent(pParent,p->pSibling,pkid);
+
+    return NULL;
+
     
 }
 

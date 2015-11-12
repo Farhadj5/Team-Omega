@@ -1,5 +1,6 @@
 /******************************************************************************
-cs2123p5Driver.c by TeamOmega [Lane Burris, Farhad Jijina, Joshua Weigand]
+cs2123p5Driver.c by Larry Clark  (For groups, place group name here and
+list your names.  For individuals, you will not be changing this.
 Purpose:
     This program manages a Price Menu for the Klunker Car Company  using a
     binary tree to represent the information.  It uses input commands to 
@@ -38,13 +39,10 @@ Input:
 
     PRINT ONE szId 
         prints one item 
- 
     QUOTE BEGIN 
         starts a quote selection.  determineQuote isn't called.
- 
-    QUOTE OPTION
-        iLevel szOptionId iSelection
- 
+    QUOTE OPTION iLevel szOptionId iSelection
+    …
     QUOTE END
         invokes determineQUote passing the quote selction information.
         Example:
@@ -127,15 +125,59 @@ int main()
     return 0;
 }
 
+void prettyPrintT(NodeT *p, int iIndent)
+{
+    int i;
+    if (p == NULL)
+        return;
+    prettyPrintT(p->pChild, iIndent+1);
+    for (i = 0; i < iIndent; i++)
+        printf("   ");
+    printf("  %2s\n", p->element.szTitle);
+    prettyPrintT(p->pSibling,iIndent+1);
+}
+
+NodeT *allocateNodeT(Element value)
+{
+    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
+    pNew->element = value;
+    pNew->pChild = NULL;
+    pNew->pSibling = NULL;
+    return pNew;
+}
+
+NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+{
+    NodeT *p = findId(pRoot,szSubId);
+
+    if (p == NULL)
+        return NULL;
+    //if child is not null, travers sibling chain until null is found
+    if (p->pChild != NULL)
+    {
+    p = p->pChild;
+    while (p->pSibling != NULL)
+        p = p->pSibling;
+    p->pSibling = allocateNodeT(value);
+    return p->pSibling;
+    }
+    //parent node is found and child is empty
+    else
+    {
+        p->pChild = allocateNodeT(value);
+        return p->pChild;
+    }
+    return NULL;
+
+}
 void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
 {
     char szToken[MAX_TOKEN_SIZE+1];
-    char szId[MAX_ID_SIZE];
     char szSubordinateToId[MAX_ID_SIZE];
     char szOptionId[MAX_ID_SIZE];
-    char cCostInd;
-    double dCost;
-    char szTitle[MAX_LINE_SIZE];            //might use something other than maxlinesize
+    NodeT *p;
+    NodeT *temp;
+
 
     //Gets first word in input
     pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
@@ -147,25 +189,41 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
 
         //check to see if it is OPTION or VALUE
-        if (strcmp(szToken,"VALUE")==0)
-        {
-            sscanf(pszInput, "%s %s %s %lf %s"
-                    ,szId
-                    ,szOptionId
-                    ,&cCostInd
-                    ,&dCost
-                    ,szTitle);
-            //use findID to find where to insert node
-        }
-        else if (strcmp(szToken,"OPTION")==0)
+        
+        if (strcmp(szToken,"OPTION")==0)
         {
             sscanf(pszInput, "%s %s %s"
-                    ,szId
+                    ,temp->element.szId
                     ,szSubordinateToId
-                    ,szTitle);
-            //use findID to find where to insert node
-        }
+                    ,temp->element.szTitle);
 
+            //check to see if it is root node
+            if (strcmp(szSubordinateToId,"ROOT")==0)
+                tree->pRoot =allocateNodeT(temp->element); //do we have to allocate here?
+            else
+            {
+                p = insertT(tree->pRoot,temp->element,szSubordinateToId);
+                
+                //(error handling) if the parent node was not found
+                if (p == NULL)
+                    printf("Error, parent %s not found", szSubordinateToId);
+            }
+        }
+        else if (strcmp(szToken,"VALUE")==0)
+        {
+            sscanf(pszInput, "%s %s %s %lf %s"
+                    ,temp->element.szId
+                    ,szOptionId
+                    ,&temp->element.cCostInd
+                    ,&temp->element.dCost
+                    ,temp->element.szTitle);
+
+            p = insertT(tree->pRoot,temp->element,szSubordinateToId);
+
+            //(error handling)if the parent node was not found
+            if (p == NULL)
+                printf("DEFINE ERROR: parent %s not found\n", szSubordinateToId);
+       }
     }
     else if (strcmp(szToken,"PRINT")==0)
     {
@@ -175,11 +233,19 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"ALL")==0)
         {
             //Pretty print
+            prettyPrintT(tree->pRoot,0);
         }
         //if the command is print one
         else
         {
-            //probably where findID comes into play
+            pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+            p = findId(tree->pRoot,szToken);
+            if (p == NULL)
+                printf("PRINT ERROR: Id %s not found\n", szToken);
+            else 
+                printf("PRINT ONE:\n Title: %s Cost: %lf\n"
+                        ,p->element.szTitle
+                        ,p->element.dCost);
         }
     }
     else if (strcmp(szToken,"QUOTE")==0)
@@ -228,12 +294,13 @@ Returns:
 **************************************************************************/
 QuoteSelection newQuoteSelection()
 {
-    QuoteSelection quote = (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
+    QuoteSelection  quote= (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
     if (quote == NULL)
         ErrExit(ERR_ALGORITHM, "malloc allocation error for QuoteSelectionImp");
     quote->iQuoteItemCnt = 0;
     return quote;
 }
+
 
 /***  U T I L I T Y functions ***/
 
