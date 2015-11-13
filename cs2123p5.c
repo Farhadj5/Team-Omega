@@ -76,20 +76,20 @@ NodeT *findId(NodeT *p, char szId[])
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
     //base case
-    if (p==NULL)
+    if (p == NULL)
         return NULL;
 
     //check to see if found
-    if (strcmp(p->element.szId,pkid->element.szId)==0)
+    if (strcmp(p->element.szId, pkid->element.szId)==0)
         return pParent;
 
     //check if there is no sibling
     if (p->pSibling == NULL)
-        findParent(p,p->pChild,pkid);
+        findParent(p, p->pChild, pkid);
 
     //if there is a sibling
     else
-        findParent(pParent,p->pSibling,pkid);
+        findParent(pParent, p->pSibling, pkid);
 
     return NULL;
 
@@ -149,6 +149,7 @@ void printOne(Tree tree, char szId[])
 void freeSubTree(NodeT *p)
 {
     
+
     
 }
 
@@ -231,8 +232,9 @@ void deleteItem(Tree tree, char szId[])
     Driver function to process a input data line (Include in Driver?)
  ***************************************************************************/
 
-/***************************** processCommand *****************************
- void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[])
+/********************************* processCommand *******************************
+ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
+ 
  Purpose:
  
  Parameters:
@@ -240,9 +242,107 @@ void deleteItem(Tree tree, char szId[])
  Returns:
  
  **************************************************************************/
-void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[])
+
+void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
 {
+    char szToken[MAX_TOKEN_SIZE+1];
+    char szSubordinateToId[MAX_ID_SIZE];
+    char szOptionId[MAX_ID_SIZE];
+    NodeT *p;
+    Element element;
     
+    
+    //Gets first word in input
+    pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+    
+    //Set of if statmenets to check the command
+    if (strcmp(szToken,"DEFINE")==0)
+    {
+        //checks the next word after the command
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        
+        //check to see if it is OPTION or VALUE
+        
+        if (strcmp(szToken,"OPTION")==0)
+        {
+            sscanf(pszInput, "%s %s %s"
+                   ,element.szId
+                   ,szSubordinateToId
+                   ,element.szTitle);
+            
+            //check to see if it is root node
+            if (strcmp(szSubordinateToId,"ROOT")==0)
+                tree->pRoot =allocateNodeT(element); //do we have to allocate here?
+            else
+            {
+                p = insertT(tree->pRoot,element,szSubordinateToId);
+                
+                //(error handling) if the parent node was not found
+                if (p == NULL)
+                    printf("Error, parent %s not found", szSubordinateToId);
+            }
+        }
+        else if (strcmp(szToken,"VALUE")==0)
+        {
+            sscanf(pszInput, "%s %s %s %lf %s"
+                   ,element.szId
+                   ,szOptionId
+                   ,&element.cCostInd
+                   ,&element.dCost
+                   ,element.szTitle);
+            
+            p = insertT(tree->pRoot,element,szOptionId);
+            
+            //(error handling)if the parent node was not found
+            if (p == NULL)
+                printf("DEFINE ERROR: parent %s not found\n", szSubordinateToId);
+        }
+    }
+    else if (strcmp(szToken,"PRINT")==0)
+    {
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        
+        //if the command is to print all
+        if (strcmp(szToken,"ALL")==0)
+        {
+            //Pretty print
+            prettyPrintT(tree->pRoot,0);
+        }
+        //if the command is print one
+        else
+        {
+            pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+            printOne(tree, szId);
+        }
+    }
+    else if (strcmp(szToken,"QUOTE")==0)
+    {
+        //3 cases, BEGIN, OPTION,END
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        if (strcmp(szToken,"BEGIN")==0)
+        {
+            //idk
+        }
+        if (strcmp(szToken,"OPTION")==0)
+        {
+            sscanf(pszInput," %d %s %d"
+                   ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iLevel
+                   ,quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId
+                   ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iSelection);
+            quoteSelection->iQuoteItemCnt++;
+        }
+    }
+    else if (strcmp(szToken,"DELETE")==0)
+    {
+        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        p = findId(tree->pRoot,szToken);
+        if (p == NULL)
+            printf("DELETE ERROR: Id %s not found\n",szToken);
+        else
+        {
+            deleteItem(tree,szToken);
+        }
+    }
     
 }
 

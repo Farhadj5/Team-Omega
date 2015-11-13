@@ -204,118 +204,6 @@ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
 
 }
 
-/********************************* processCommand *******************************
- void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
-{
-    char szToken[MAX_TOKEN_SIZE+1];
-    char szSubordinateToId[MAX_ID_SIZE];
-    char szOptionId[MAX_ID_SIZE];
-    NodeT *p;
-    Element element;
-
-
-    //Gets first word in input
-    pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-
-    //Set of if statmenets to check the command
-    if (strcmp(szToken,"DEFINE")==0)
-    {
-        //checks the next word after the command
-        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-
-        //check to see if it is OPTION or VALUE
-        
-        if (strcmp(szToken,"OPTION")==0)
-        {
-            sscanf(pszInput, "%s %s %s"
-                    ,element.szId
-                    ,szSubordinateToId
-                    ,element.szTitle);
-
-            //check to see if it is root node
-            if (strcmp(szSubordinateToId,"ROOT")==0)
-                tree->pRoot =allocateNodeT(element); //do we have to allocate here?
-            else
-            {
-                p = insertT(tree->pRoot,element,szSubordinateToId);
-                
-                //(error handling) if the parent node was not found
-                if (p == NULL)
-                    printf("Error, parent %s not found", szSubordinateToId);
-            }
-        }
-        else if (strcmp(szToken,"VALUE")==0)
-        {
-            sscanf(pszInput, "%s %s %s %lf %s"
-                    ,element.szId
-                    ,szOptionId
-                    ,&element.cCostInd
-                    ,&element.dCost
-                    ,element.szTitle);
-
-            p = insertT(tree->pRoot,element,szOptionId);
-
-            //(error handling)if the parent node was not found
-            if (p == NULL)
-                printf("DEFINE ERROR: parent %s not found\n", szSubordinateToId);
-       }
-    }
-    else if (strcmp(szToken,"PRINT")==0)
-    {
-        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-        
-        //if the command is to print all
-        if (strcmp(szToken,"ALL")==0)
-        {
-            //Pretty print
-            prettyPrintT(tree->pRoot,0);
-        }
-        //if the command is print one
-        else
-        {
-            pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-            printOne(tree, szId);
-        }
-    }
-    else if (strcmp(szToken,"QUOTE")==0)
-    {
-        //3 cases, BEGIN, OPTION,END
-        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-        if (strcmp(szToken,"BEGIN")==0)
-        {
-            //idk
-        }
-        if (strcmp(szToken,"OPTION")==0)
-        {
-            sscanf(pszInput," %d %s %d"
-                    ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iLevel
-                    ,quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId
-                    ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iSelection);
-            quoteSelection->iQuoteItemCnt++;
-        }
-    }
-    else if (strcmp(szToken,"DELETE")==0)
-    {
-        pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-        p = findId(tree->pRoot,szToken);
-        if (p == NULL)
-            printf("DELETE ERROR: Id %s not found\n",szToken);
-        else
-        {
-            deleteItem(tree,szToken);
-        }
-    }
-}
 /******************** newTree **************************************
   Tree newTree()
 Purpose:
@@ -328,6 +216,7 @@ Returns:
     Returns a Tree.  Note that a Tree is simply a pointer to 
     a TreeImp. 
 **************************************************************************/
+
 Tree newTree()
 {
     Tree tree = (Tree)malloc(sizeof(TreeImp));
@@ -349,6 +238,7 @@ Returns:
     Returns a QuoteSelection.  Note that a QuoteSelection is simply a pointer to 
     a QuoteSelectionImp. 
 **************************************************************************/
+
 QuoteSelection newQuoteSelection()
 {
     QuoteSelection  quote= (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
@@ -386,6 +276,7 @@ Notes:
 Returns:
     Returns a program exit return code:  the value of iexitRC.
 **************************************************************************/
+
 void ErrExit(int iexitRC, char szFmt[], ... )
 {
     va_list args;               // This is the standard C variable argument list type
@@ -399,6 +290,7 @@ void ErrExit(int iexitRC, char szFmt[], ... )
     printf("\n");
     exit(iexitRC);
 }
+
 /******************** warning **************************************
   void warning(char szFmt[], ... )
 Purpose:
@@ -421,6 +313,7 @@ Notes:
 Returns:
     n/a
 **************************************************************************/
+
 void warning(char szFmt[], ... )
 {
     va_list args;               // This is the standard C variable argument list type
@@ -433,6 +326,7 @@ void warning(char szFmt[], ... )
                                 // va_list argument
     printf("\n");
 }
+
 /******************** exitUsage *****************************
     void exitUsage(int iArg, char *pszMessage, char *pszDiagnosticInfo)
 Purpose:
@@ -460,6 +354,7 @@ Parameters:
 Notes:
     This routine causes the program to exit.
 **************************************************************************/
+
 void exitUsage(int iArg, char *pszMessage, char *pszDiagnosticInfo)
 {
     switch (iArg)
@@ -510,6 +405,7 @@ Notes:
     - If a token isn't found, szToken is set to an empty string
     - This function does not skip over white space occurring prior to the token.
 **************************************************************************/
+
 char * getToken(char *pszInputTxt, char szToken[], int iTokenSize)
 {
     int iDelimPos;                      // found position of delim
