@@ -252,6 +252,18 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
     {
         //3 cases, BEGIN, OPTION,END
         pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        if (strcmp(szToken,"BEGIN")==0)
+        {
+            //idk
+        }
+        if (strcmp(szToken,"OPTION")==0)
+        {
+            sscanf(pszInput," %d %s %d"
+                    ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iLevel
+                    ,quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId
+                    ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iSelection);
+            quoteSelection->iQuoteItemCnt++;
+        }
     }
     else if (strcmp(szToken,"DELETE")==0)
     {
@@ -261,8 +273,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             printf("DELETE ERROR: Id %s not found\n",szToken);
         else
         {
-            NodeT *temp;
-            temp = findParent();
+            deleteItem(tree,szToken);
         }
     }
 }
