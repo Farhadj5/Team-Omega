@@ -194,8 +194,15 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
-    // What needs to be the subscript of the array?
-    printf("Title: %s\nCost: %d", quoteSelection->quoteItemM[0].szOptionId, quoteSelection->quoteItemM[0].dCost);
+    int iIncrement;
+
+    for (iIncrement = quoteSelection->iQuoteItemCnt; iIncrement < sizeof(quoteItemM); iIncrement++)
+    {
+        // What needs to be the subscript of the array?
+        printf("Title: %s\nCost: %d", quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId, quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].dCost);
+    }
+    
+    
     
     // QuoteResult is supposed to be dTotalCost;
     return QuoteResult = dTotalCost;

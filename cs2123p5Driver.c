@@ -125,6 +125,17 @@ int main()
     return 0;
 }
 
+/********************************* prettyPrintT *******************************
+ void prettyPrintT(NodeT *p, int iIndent)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
 void prettyPrintT(NodeT *p, int iIndent)
 {
     int i;
@@ -137,6 +148,17 @@ void prettyPrintT(NodeT *p, int iIndent)
     prettyPrintT(p->pSibling,iIndent+1);
 }
 
+/********************************* allocateNodeT *******************************
+ NodeT *allocateNodeT(Element value)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
 NodeT *allocateNodeT(Element value)
 {
     NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
@@ -145,6 +167,17 @@ NodeT *allocateNodeT(Element value)
     pNew->pSibling = NULL;
     return pNew;
 }
+
+/********************************* insertT *******************************
+ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
 
 NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
 {
@@ -170,6 +203,18 @@ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
     return NULL;
 
 }
+
+/********************************* processCommand *******************************
+ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
 void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
 {
     char szToken[MAX_TOKEN_SIZE+1];
