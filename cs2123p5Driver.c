@@ -176,7 +176,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
     char szSubordinateToId[MAX_ID_SIZE];
     char szOptionId[MAX_ID_SIZE];
     NodeT *p;
-    NodeT *temp;
+    Element element;
 
 
     //Gets first word in input
@@ -193,16 +193,16 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"OPTION")==0)
         {
             sscanf(pszInput, "%s %s %s"
-                    ,temp->element.szId
+                    ,element.szId
                     ,szSubordinateToId
-                    ,temp->element.szTitle);
+                    ,element.szTitle);
 
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
-                tree->pRoot =allocateNodeT(temp->element); //do we have to allocate here?
+                tree->pRoot =allocateNodeT(element); //do we have to allocate here?
             else
             {
-                p = insertT(tree->pRoot,temp->element,szSubordinateToId);
+                p = insertT(tree->pRoot,element,szSubordinateToId);
                 
                 //(error handling) if the parent node was not found
                 if (p == NULL)
@@ -212,13 +212,13 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         else if (strcmp(szToken,"VALUE")==0)
         {
             sscanf(pszInput, "%s %s %s %lf %s"
-                    ,temp->element.szId
+                    ,element.szId
                     ,szOptionId
-                    ,&temp->element.cCostInd
-                    ,&temp->element.dCost
-                    ,temp->element.szTitle);
+                    ,&element.cCostInd
+                    ,&element.dCost
+                    ,element.szTitle);
 
-            p = insertT(tree->pRoot,temp->element,szSubordinateToId);
+            p = insertT(tree->pRoot,element,szOptionId);
 
             //(error handling)if the parent node was not found
             if (p == NULL)
@@ -255,8 +255,15 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
     }
     else if (strcmp(szToken,"DELETE")==0)
     {
-        
         pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
+        p = findId(tree->pRoot,szToken);
+        if (p == NULL)
+            printf("DELETE ERROR: Id %s not found\n",szToken);
+        else
+        {
+            NodeT *temp;
+            temp = findParent();
+        }
     }
 }
 /******************** newTree **************************************
