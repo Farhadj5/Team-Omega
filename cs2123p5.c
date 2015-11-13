@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include "cs2123p5Driver.c"
+#include "cs2123p5.h"
 
 
 /**************************************************************************
@@ -181,16 +181,24 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
 /************************** determineQuote *******************************
  QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
  Purpose:
- 
+    . After the QUOTE END command is received, this is called.
+    . Prints the quote details including the title and cost for each option value.
+    . Handles error cases and understands a partial quote.
  Parameters:
+    Tree tree                       Tree being passed in to be traversered
+                                        through for the quote
  
+    QuoteSelection quoteSelection
  Returns:
- 
+    Returns a QuoteResult which includes a total cost
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
+    // What needs to be the subscript of the array?
+    printf("Title: %s\nCost: %d", quoteSelection->quoteItemM[0].szOptionId, quoteSelection->quoteItemM[0].dCost);
     
-    
+    // QuoteResult is supposed to be dTotalCost;
+    return QuoteResult = dTotalCost;
 }
 
 /********************************* deleteItem *******************************
