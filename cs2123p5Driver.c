@@ -239,13 +239,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         else
         {
             pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-            p = findId(tree->pRoot,szToken);
-            if (p == NULL)
-                printf("PRINT ERROR: Id %s not found\n", szToken);
-            else 
-                printf("PRINT ONE:\n Title: %s Cost: %lf\n"
-                        ,p->element.szTitle
-                        ,p->element.dCost);
+            printOne(tree, szId);
         }
     }
     else if (strcmp(szToken,"QUOTE")==0)

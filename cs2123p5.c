@@ -123,6 +123,13 @@ void printPriceMenu(Tree tree)
 void printOne(Tree tree, char szId[])
 {
     
+        p = findId(tree->pRoot,szToken);
+        if (p == NULL)
+            printf("PRINT ERROR: Id %s not found\n", szToken);
+        else
+            printf("PRINT ONE:\n Title: %s Cost: %lf\n"
+                   ,p->element.szTitle
+                   ,p->element.dCost);
     
 }
 
