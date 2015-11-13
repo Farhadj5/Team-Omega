@@ -116,12 +116,14 @@ void printPriceMenu(Tree tree)
  Purpose:
  
  Parameters:
- 
+ I      Tree tree       Struct containing the Root and Nodes of a tree
+ IO     char szId[]     Element Identification
  Returns:
  
  **************************************************************************/
 void printOne(Tree tree, char szId[])
 {
+<<<<<<< HEAD
     NodeT *p = findId(tree->pRoot,szId);
     if (p == NULL)
         printf("PRINT ERROR: Id %s not found\n", szId);
@@ -129,6 +131,20 @@ void printOne(Tree tree, char szId[])
         printf("PRINT ONE:\n Title: %s Cost: %lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
+=======
+    
+<<<<<<< Updated upstream
+        p = findId(tree->pRoot,szToken);
+        if (p == NULL)
+            printf("PRINT ERROR: Id %s not found\n", szToken);
+        else
+            printf("PRINT ONE:\n Title: %s Cost: %lf\n"
+                   ,p->element.szTitle
+                   ,p->element.dCost);
+    
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/master
 }
 
 /****************************** freeSubTree *******************************
@@ -239,4 +255,85 @@ void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[])
     
 }
 
+/**************************************************************************
+                                    QuoteEnd
+ ***************************************************************************/
 
+/******************************** quoteEND ********************************
+ void quoteEND(Tree tree, char szId[])
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************
+void quoteEND(Tree tree, char szId[])
+{
+    //Local Variable Declaration
+    char szTitle[30] = tree->pRoot->element.szTitle;
+    
+    //Print Model
+    while(szId == model)
+    {
+        if(tree->pRoot->element.szTitle == base) //Prints BASE Model
+            printf("\t Base
+                   \t\t\t\t
+                   
+                   else if(tree->pRoot->element.szTitle == lx) //Prints PLUS Model
+                   printf("\t Plus\n");
+                   else if(tree->pRoot->element.szTitle == oy) //Prints OH_YEAH! Model
+                   printf("\t Oh_Yeah!\n");
+                   else
+                   printf("\nInvalid Model\n");
+                   }
+                   
+                   //Print Engine
+                   while(szId == engine)
+                   {
+                       if(tree->pRoot->element.szId == base) //Prints BASE Model
+                           if
+                               printf("\t\t\t Base\n");
+                       
+                           else
+                               printf("\nInvalid Engine\n");
+                       
+                   }
+                   
+                   //Print Color
+                   while(szId == color)
+                   {
+                       if(tree->pRoot->element.szId == base) //Prints BASE Model
+                           if
+                               printf("\t\t\t Base\n");
+                       
+                           else
+                               printf("\nInvalid Engine\n");
+                       
+                   }
+                   
+                   //Print Audio
+                   while(szId == audio)
+                   {
+                       if(tree->pRoot->element.szId == base) //Prints BASE Model
+                           if
+                               printf("\t\t\t Base\n");
+                       
+                           else
+                               printf("\nInvalid Engine\n");
+                       
+                   }
+                   
+                   //Print Warranty
+                   while(szId == warranty)
+                   {
+                       if(tree->pRoot->element.szId == base) //Prints BASE Model
+                           if
+                               printf("\t\t\t Base\n");
+                       
+                           else
+                               printf("\nInvalid Engine\n");
+                       
+                   }
+        }
+*/
