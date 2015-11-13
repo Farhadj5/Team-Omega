@@ -122,15 +122,13 @@ void printPriceMenu(Tree tree)
  **************************************************************************/
 void printOne(Tree tree, char szId[])
 {
-    
-        p = findId(tree->pRoot,szToken);
-        if (p == NULL)
-            printf("PRINT ERROR: Id %s not found\n", szToken);
-        else
-            printf("PRINT ONE:\n Title: %s Cost: %lf\n"
-                   ,p->element.szTitle
-                   ,p->element.dCost);
-    
+    NodeT *p = findId(tree->pRoot,szId);
+    if (p == NULL)
+        printf("PRINT ERROR: Id %s not found\n", szId);
+    else
+        printf("PRINT ONE:\n Title: %s Cost: %lf\n"
+                ,p->element.szTitle
+                ,p->element.dCost);
 }
 
 /****************************** freeSubTree *******************************
@@ -194,18 +192,17 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
-    int iIncrement;
-
-    for (iIncrement = quoteSelection->iQuoteItemCnt; iIncrement < sizeof(quoteItemM); iIncrement++)
+    int i = 0;
+    while (i <= quoteSelection->iQuoteItemCnt)
     {
-        // What needs to be the subscript of the array?
-        printf("Title: %s\nCost: %d", quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId, quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].dCost);
+        NodeT *p = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
+        switch(quoteSelection->quoteItemM[i].iLevel)
+        {
+
+        }
+
     }
-    
-    
-    
     // QuoteResult is supposed to be dTotalCost;
-    return QuoteResult = dTotalCost;
 }
 
 /********************************* deleteItem *******************************
