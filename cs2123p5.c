@@ -123,7 +123,6 @@ void printPriceMenu(Tree tree)
  **************************************************************************/
 void printOne(Tree tree, char szId[])
 {
-<<<<<<< HEAD
     NodeT *p = findId(tree->pRoot,szId);
     if (p == NULL)
         printf("PRINT ERROR: Id %s not found\n", szId);
@@ -131,9 +130,7 @@ void printOne(Tree tree, char szId[])
         printf("PRINT ONE:\n Title: %s Cost: %lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
-=======
-    
-<<<<<<< Updated upstream
+
         p = findId(tree->pRoot,szToken);
         if (p == NULL)
             printf("PRINT ERROR: Id %s not found\n", szToken);
@@ -141,10 +138,6 @@ void printOne(Tree tree, char szId[])
             printf("PRINT ONE:\n Title: %s Cost: %lf\n"
                    ,p->element.szTitle
                    ,p->element.dCost);
-    
-=======
->>>>>>> Stashed changes
->>>>>>> origin/master
 }
 
 /****************************** freeSubTree *******************************
@@ -174,7 +167,23 @@ void freeSubTree(NodeT *p)
  **************************************************************************/
 void freeTree(Tree tree)
 {
+    NodeT *p = tree->pRoot;
+    NodeT *pFree;
     
+    if (p == NULL)
+    {
+        return;
+    }
+    
+    if (p->pChild)
+    {
+        pFree = p->pChild;
+        p = p->pChild->pSibling;
+        free(pFree);
+        freeTree(p);
+    }
+    
+    return freeTree(p->pChild->pSibling);
     
 }
 

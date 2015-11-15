@@ -241,7 +241,7 @@ Returns:
 
 QuoteSelection newQuoteSelection()
 {
-    QuoteSelection  quote= (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
+    QuoteSelection quote = (QuoteSelection)malloc(sizeof(QuoteSelectionImp));
     if (quote == NULL)
         ErrExit(ERR_ALGORITHM, "malloc allocation error for QuoteSelectionImp");
     quote->iQuoteItemCnt = 0;
