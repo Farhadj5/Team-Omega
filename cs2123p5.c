@@ -175,7 +175,12 @@ void freeTree(Tree tree)
         return;
     }
     
-    if (p->pChild)
+    if (p->pChild == NULL && p->pSibling == NULL)
+    {
+        free(p);
+    }
+    
+    else if (freeTree(p->pChild) != NULL)
     {
         pFree = p->pChild;
         p = p->pChild->pSibling;
@@ -183,7 +188,8 @@ void freeTree(Tree tree)
         freeTree(p);
     }
     
-    return freeTree(p->pChild->pSibling);
+    else
+        freeTree(p->pSibling);
     
 }
 
