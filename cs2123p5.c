@@ -42,11 +42,13 @@
 /******************************* findId ***********************************
  NodeT *findId(NodeT *p, char szId[])
  Purpose:
- 
+    Recursively going through the tree to find the specific Id we are looking for.
  Parameters:
- 
+    NodeT *p        Node that is being Id searched.
+    char szId[]     Character array containing the Id we are searching
+                        for.
  Returns:
-
+    Returns the child we are looking that has the specified Id.
  **************************************************************************/
 NodeT *findId(NodeT *p, char szId[])
 {
@@ -67,11 +69,13 @@ NodeT *findId(NodeT *p, char szId[])
 /***************************** findParent *********************************
  NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
  Purpose:
- 
+    Finds the parent of the child we are currently on.
  Parameters:
- 
+    NodeT *pParent
+    NodeT *p
+    NodeT *pkid
  Returns:
- 
+    Returns that specified child's parent node.
  **************************************************************************/
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
@@ -114,13 +118,15 @@ void printPriceMenu(Tree tree)
 /****************************** printOne **********************************
  void printOne(Tree tree, char szId[])
  Purpose:
- 
+    Supposed to print only one part of the tree
+        - Title
+        - Cost
  Parameters:
  I      Tree tree       Struct containing the Root and Nodes of a tree
  IO     char szId[]     Element Identification
  Returns:
  
- **************************************************************************/
+**************************************************************************/
 void printOne(Tree tree, char szId[])
 {
     NodeT *p = findId(tree->pRoot,szId);
@@ -143,9 +149,9 @@ void printOne(Tree tree, char szId[])
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
  Purpose:
- 
+    Frees the sub-tree and reconnects that sub-tree's sibiling to the parent, or to the other sub-tree's sibiling.
  Parameters:
- 
+    NodeT *p    Node that will be freed.
  Returns:
  
  **************************************************************************/
@@ -159,11 +165,10 @@ void freeSubTree(NodeT *p)
 /********************************* freeTree *******************************
  void freeTree(Tree tree)
  Purpose:
- 
+    Frees the whole tree.
  Parameters:
- 
+    I Tree tree     Tree that is being passed in for freeing.
  Returns:
- 
  **************************************************************************/
 void freeTree(Tree tree)
 {
