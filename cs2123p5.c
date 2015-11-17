@@ -149,7 +149,7 @@ void printOne(Tree tree, char szId[])
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
  Purpose:
-    Frees the sub-tree and reconnects that sub-tree's sibiling to the parent, or to the other sub-tree's sibiling.
+    Frees the current node and its children.
  Parameters:
     NodeT *p    Node that will be freed.
  Returns:
@@ -157,8 +157,30 @@ void printOne(Tree tree, char szId[])
  **************************************************************************/
 void freeSubTree(NodeT *p)
 {
-    
 
+    if (p == NULL)
+    {
+        return;
+    }
+    
+    if (p->pChild == NULL && p->pSibling == NULL)
+    {
+        free(p);
+        return ;
+    }
+    
+    else if (p->pSibling != NULL)
+    {
+        freeTree(p->pSibling);
+        freeTree(p->pChild);
+        free(p);
+    }
+    
+    else
+    {
+        freeTree(p->pChild);
+        free(p);
+    }
     
 }
 
@@ -173,7 +195,6 @@ void freeSubTree(NodeT *p)
 void freeTree(Tree tree)
 {
     NodeT *p = tree->pRoot;
-    NodeT *pFree;
     
     if (p == NULL)
     {
@@ -183,18 +204,21 @@ void freeTree(Tree tree)
     if (p->pChild == NULL && p->pSibling == NULL)
     {
         free(p);
+        return ;
     }
     
-    else if (freeTree(p->pChild) != NULL)
+    else if (p->pSibling != NULL)
     {
-        pFree = p->pChild;
-        p = p->pChild->pSibling;
-        free(pFree);
-        freeTree(p);
+        freeTree(p->pSibling);
+        freeTree(p->pChild);
+        free(p);
     }
     
     else
-        freeTree(p->pSibling);
+    {
+        freeTree(p->pChild);
+        free(p);
+    }
     
 }
 
@@ -220,10 +244,10 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
     . Prints the quote details including the title and cost for each option value.
     . Handles error cases and understands a partial quote.
  Parameters:
-    Tree tree                       Tree being passed in to be traversered
-                                        through for the quote
+    I Tree tree                         Tree being passed in to be traversered
+                                            through for the quote
  
-    QuoteSelection quoteSelection
+    I/O QuoteSelection quoteSelection
  Returns:
     Returns a QuoteResult which includes a total cost
  **************************************************************************/
@@ -245,15 +269,17 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 /********************************* deleteItem *******************************
  void deleteItem(Tree tree, char szId[])
  Purpose:
- 
+    Uses freeSubTree to free current node as well as the children of the current node.
+    After freeSubTree is used, reconnects that sub-tree's sibiling to the parent, or to the other sub-tree's sibiling.
  Parameters:
- 
+    I/O Tree tree
  Returns:
  
  **************************************************************************/
 void deleteItem(Tree tree, char szId[])
 {
     
+    freeSubTree(
     
 }
 
