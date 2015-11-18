@@ -115,10 +115,19 @@ int main()
         //read in file
         processCommand(tree, quoteSelection, szInputBuffer);
     }
-
-    // Free the tree, quote selection and stdin
-    freeTree(tree);
-    free(quoteSelection);
+    NodeT *pParent  = (NodeT *)malloc(sizeof(NodeT));
+    NodeT *pKid = (NodeT *)malloc(sizeof(NodeT));
+    printf("before strcpy\n");
+    strcpy(pKid->element.szId,"bluePlus");
+    printf("before findparent %s\n",pKid->element.szId);
+    pParent =findParent(NULL,tree->pRoot,pKid);
+    if (pParent == NULL)
+        printf("was null\n");
+    else
+        printf("HERE: %s\n",pParent->element.szId);
+    //Free the tree, quote selection and stdin
+    //freeTree(tree);
+    //free(quoteSelection);
     fclose(stdin);
     printf("\n");
     return 0;

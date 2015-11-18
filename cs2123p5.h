@@ -134,6 +134,7 @@ typedef struct
 
 // Prototypes of functions you must write.  Many of these functions
 // require helper functions to do the real work.
+void prettyPrintT(NodeT *p, int iIndent);
 NodeT *findId(NodeT *p, char szId[]);
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid);
 void printPriceMenu(Tree tree);
@@ -143,6 +144,8 @@ void freeTree(Tree tree);
 void insertPriceMenu(Tree tree, Element element, char szParentId[]);
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection);
 void deleteItem(Tree tree, char szId[]);
+NodeT *allocateNodeT(Element value);
+NodeT *insertT(NodeT *pRoot,Element value,char szSubId[]);
 
 // Driver function to process a input data line.  Groups must write this function
 void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[]);

@@ -79,25 +79,17 @@ NodeT *findId(NodeT *p, char szId[])
  **************************************************************************/
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
-    //base case
     if (p == NULL)
         return NULL;
+    if (strcmp(p->element.szId,pkid->element.szId) == 0)
+            return pParent;
 
-    //check to see if found
-    if (strcmp(p->element.szId, pkid->element.szId)==0)
-        return pParent;
+    if (p->pSibling != NULL)
+        pParent = findParent(pParent,p->pSibling,pkid);
+    if (p->pChild != NULL)
+        pParent = findParent(p,p->pChild,pkid);
 
-    //check if there is no sibling
-    if (p->pSibling == NULL)
-        findParent(p, p->pChild, pkid);
-
-    //if there is a sibling
-    else
-        findParent(pParent, p->pSibling, pkid);
-
-    return NULL;
-
-    
+    return pParent;
 }
 
 /*************************** printPriceMenu *******************************
@@ -136,16 +128,7 @@ void printOne(Tree tree, char szId[])
         printf("PRINT ONE:\n Title: %s Cost: %lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
-
-        p = findId(tree->pRoot,szToken);
-        if (p == NULL)
-            printf("PRINT ERROR: Id %s not found\n", szToken);
-        else
-            printf("PRINT ONE:\n Title: %s Cost: %lf\n"
-                   ,p->element.szTitle
-                   ,p->element.dCost);
 }
-
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
  Purpose:
@@ -154,7 +137,7 @@ void printOne(Tree tree, char szId[])
     NodeT *p    Node that will be freed.
  Returns:
  
- **************************************************************************/
+ **************************************************************************
 void freeSubTree(NodeT *p)
 {
 
@@ -184,14 +167,14 @@ void freeSubTree(NodeT *p)
     
 }
 
-/********************************* freeTree *******************************
+********************************* freeTree *******************************
  void freeTree(Tree tree)
  Purpose:
     Frees the whole tree.
  Parameters:
     I Tree tree     Tree that is being passed in for freeing.
  Returns:
- **************************************************************************/
+ **************************************************************************
 void freeTree(Tree tree)
 {
     NodeT *p = tree->pRoot;
@@ -222,7 +205,7 @@ void freeTree(Tree tree)
     
 }
 
-/************************** insertPriceMenu *******************************
+************************** insertPriceMenu *******************************
  void insertPriceMenu(Tree tree, Element element, char szParentId[])
  Purpose:
  
@@ -254,6 +237,7 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
     int i = 0;
+    QuoteResult quote;
     while (i <= quoteSelection->iQuoteItemCnt)
     {
         NodeT *p = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
@@ -264,6 +248,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 
     }
     // QuoteResult is supposed to be dTotalCost;
+    return quote; //only put here to prevent error messages
 }
 
 /********************************* deleteItem *******************************
@@ -279,7 +264,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 void deleteItem(Tree tree, char szId[])
 {
     
-    freeSubTree(
+    //freeSubTree(
     
 }
 
@@ -327,7 +312,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
-                tree->pRoot =allocateNodeT(element); //do we have to allocate here?
+                tree->pRoot = allocateNodeT(element); //do we have to allocate here?
             else
             {
                 p = insertT(tree->pRoot,element,szSubordinateToId);
@@ -367,7 +352,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         else
         {
             pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
-            printOne(tree, szId);
+            printOne(tree, szToken);
         }
     }
     else if (strcmp(szToken,"QUOTE")==0)
