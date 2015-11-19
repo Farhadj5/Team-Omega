@@ -25,41 +25,8 @@
                             Helper Functions
  ***************************************************************************/
 
-/**************************** prettyPrintMenu *****************************
- void prettyPrintMenu(NodeT *p, int iIndent)
- Purpose:
-    Traverses the tree, prints out the siblings, and their details in the
- form of a price menu.
- Parameters:
- I      NodeT *p        Pointer directed to the root of the Tree
- I      int Indent       Used to determine starting point of indented print
- Returns:
- N/A
- **************************************************************************/
-void prettyPrintMenu(NodeT *p, int iIndent)
-{
-    //Local Variables
-    int i;
-    NodeT *pTitle = p->element.szTitle;
-    NodeT *pCost = p->element.dCost;
-    NodeT *pCostIdn = p->element.cCostInd;
-
-    if (p == NULL)
-        return;
-    for (i = 0; i < iIndent; i++)
-      printf("   ");
-      if(pCostIdn == 0) //Prints the szTitle of each node NOT containing a price
-         printf("  %2s\n", *pTitle);
-      else              //Prints the szTitle of each node containing a price
-      {
-        printf("  %2s", *pTitle);
-        printf("\t %d", *pCost); //Still Needs Work (Allignment)
-      }
-
-    prettyPrintT(p->pChild,iIndent+1);
-    prettyPrintT(p->pSibling,iIndent+1);
-}
-
+//Insert Helper Functions to be used with with main Functions found in the
+//  Header file.
 
 
 
@@ -143,14 +110,8 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
  **************************************************************************/
 void printPriceMenu(Tree tree)
 {
-    //Local Variable(s)
-    Node *pCurrentNode = tree->pRoot;
-
-    //Price Menu Title
-    printf("Price Menu\n");
-
-    //Traverse the tree and print each nodes Title
-    prettyPrintMenu(*pCurrentNode, 1); //Start indents = 1
+    
+    
 }
 
 /****************************** printOne **********************************
@@ -355,7 +316,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,element.szId
                    ,szSubordinateToId
                    ,element.szTitle);
-           printf("TITLE: %s\n",element.szTitle); 
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
@@ -385,7 +345,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-            printf("VALUE TITLE: %s\n",element.szTitle);
             p = insertT(tree->pRoot,element,szOptionId);
             
             //(error handling)if the parent node was not found

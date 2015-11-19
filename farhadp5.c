@@ -89,6 +89,62 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
     return pFound;
 }
 
+/********************************* allocateNodeT *******************************
+ NodeT *allocateNodeT(Element value)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *allocateNodeT(Element value)
+{
+    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
+    pNew->element = value;
+    pNew->pChild = NULL;
+    pNew->pSibling = NULL;
+    return pNew;
+}
+
+/********************************* insertT *******************************
+ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+{
+    NodeT *p = findId(pRoot,szSubId);
+
+    if (p == NULL)
+        return NULL;
+    //if child is not null, traverses sibling chain until null is found
+    if (p->pChild != NULL)
+    {
+        p = p->pChild;
+        while (p->pSibling != NULL)
+            p = p->pSibling;
+        p->pSibling = allocateNodeT(value);
+        return p->pSibling;
+    }
+    //parent node is found and child is empty
+    else
+    {
+        p->pChild = allocateNodeT(value);
+        return p->pChild;
+    }
+    return NULL;
+
+}
+
 /********************************* processCommand *******************************
  void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
  
