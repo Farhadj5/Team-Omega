@@ -1,3 +1,34 @@
+/************************** determineQuote *******************************
+ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
+ Purpose:
+    . After the QUOTE END command is received, this is called.
+    . Prints the quote details including the title and cost for each option value.
+    . Handles error cases and understands a partial quote.
+ Parameters:
+    I Tree tree                         Tree being passed in to be traversered
+                                            through for the quote
+ 
+    I/O QuoteSelection quoteSelection
+ Returns:
+    Returns a QuoteResult which includes a total cost
+ **************************************************************************/
+QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
+{
+    int i = 0;
+    QuoteResult quote;
+    while (i <= quoteSelection->iQuoteItemCnt)
+    {
+        NodeT *p = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
+        switch(quoteSelection->quoteItemM[i].iLevel)
+        {
+
+        }
+
+    }
+    // QuoteResult is supposed to be dTotalCost;
+    return quote; //only put here to prevent error messages
+}
+
 /******************************* findId ***********************************
  NodeT *findId(NodeT *p, char szId[])
  Purpose:
