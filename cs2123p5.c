@@ -297,9 +297,9 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"OPTION")==0)
         {
             sscanf(pszInput, "%s %s %s"
-                   ,element.szId
+                   ,&element.szId
                    ,szSubordinateToId
-                   ,element.szTitle);
+                   ,&element.szTitle);
             
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
@@ -321,11 +321,11 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         else if (strcmp(szToken,"VALUE")==0)
         {
             sscanf(pszInput, "%s %s %s %lf %s"
-                   ,element.szId
+                   ,&element.szId
                    ,szOptionId
                    ,&element.cCostInd
                    ,&element.dCost
-                   ,element.szTitle);
+                   ,&element.szTitle);
             
             p = insertT(tree->pRoot->pChild,element,szOptionId);
             
