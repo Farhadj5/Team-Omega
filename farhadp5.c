@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include "cs2123p5.h"
+
 /************************** determineQuote *******************************
  QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
  Purpose:
@@ -181,7 +187,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,element.szId
                    ,szSubordinateToId
                    ,element.szTitle);
-           printf("TITLE: %s\n",element.szTitle); 
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
@@ -211,7 +216,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-            printf("VALUE TITLE: %s\n",element.szTitle);
             p = insertT(tree->pRoot,element,szOptionId);
             
             //(error handling)if the parent node was not found
@@ -227,7 +231,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"ALL")==0)
         {
             //Pretty print
-            prettyPrintT(tree->pRoot,0);
+            printPriceMenu(tree);
         }
         //if the command is print one
         else
@@ -261,8 +265,9 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             printf("DELETE ERROR: Id %s not found\n",szToken);
         else
         {
-            deleteItem(tree,szToken);
+            //deleteItem(tree,szToken);
         }
     }
     
 }
+

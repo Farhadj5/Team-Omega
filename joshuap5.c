@@ -21,28 +21,21 @@
  **************************************************************************/
 void prettyPrintMenu(NodeT *p, int iIndent)
 {
-    //Local Variables
     int i;
-    NodeT *pTitle = p->element.szTitle;
-    NodeT *pCost = p->element.dCost;
-    NodeT *pCostIdn = p->element.cCostInd;
-
     if (p == NULL)
         return;
+    prettyPrintMenu(p->pSibling, iIndent);
     for (i = 0; i < iIndent; i++)
-      printf("   ");
-      if(pCostIdn == 0) //Prints the szTitle of each node NOT containing a price
-         printf("  %2s\n", *pTitle);
-      else              //Prints the szTitle of each node containing a price
-      {
-        printf("  %2s", *pTitle);
-        printf("\t %d", *pCost); //Still Needs Work (Allignment)
-      }
-
-    prettyPrintT(p->pChild,iIndent+1);
-    prettyPrintT(p->pSibling,iIndent+1);
+        printf("   ");
+    if (p->element.cCostInd == 0)
+        printf("  %-26s\n", p->element.szTitle);
+    else
+    {
+        printf("  %-26s",p->element.szTitle);
+        printf("\t%.2lf\n",p->element.dCost);
+    }
+    prettyPrintMenu(p->pChild,iIndent+2);
 }
-
 /**************************************************************************
                              Main Functions
  ***************************************************************************/
@@ -58,13 +51,13 @@ void prettyPrintMenu(NodeT *p, int iIndent)
 void printPriceMenu(Tree tree)
 {
     //Local Variable(s)
-    Node *pCurrentNode = tree->pRoot;
+    NodeT *pCurrentNode = tree->pRoot;
 
     //Price Menu Title
     printf("Price Menu\n");
 
     //Traverse the tree and print each nodes Title
-    prettyPrintMenu(*pCurrentNode, 1); //Start indents = 1
+    prettyPrintMenu(pCurrentNode, 0); //Start indents = 1
 }
 
 /****************************** printOne **********************************
