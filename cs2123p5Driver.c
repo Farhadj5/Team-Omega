@@ -125,7 +125,7 @@ int main()
     if (pParent == NULL)
         printf("was null\n");
     else
-        printf("HERE: %s\n",pParent->element.szId);
+        printf("HERE: %s\n",pParent->element.szTitle);
     //Free the tree, quote selection and stdin
     //freeTree(tree);
     //free(quoteSelection);
@@ -150,11 +150,11 @@ void prettyPrintT(NodeT *p, int iIndent)
     int i;
     if (p == NULL)
         return;
-    prettyPrintT(p->pChild, iIndent+1);
+    prettyPrintT(p->pSibling, iIndent);
     for (i = 0; i < iIndent; i++)
         printf("   ");
     printf("  %2s\n", p->element.szTitle);
-    prettyPrintT(p->pSibling,iIndent+1);
+    prettyPrintT(p->pChild,iIndent+3);
 }
 
 /********************************* allocateNodeT *******************************

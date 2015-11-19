@@ -58,7 +58,7 @@ NodeT *findId(NodeT *p, char szId[])
         return NULL;
 
     //szId is found
-    if (strcmp(p->element.szId, szId)==0)
+    if (strcmp(p->element.szId,szId)==0)
         return p;
 
     //iterate through the rest of the tree
@@ -67,7 +67,7 @@ NodeT *findId(NodeT *p, char szId[])
     if (pFound != NULL)
         return pFound;
     if (p->pChild != NULL)
-        findId(p->pChild, szId);
+        pFound =findId(p->pChild, szId);
 
     return pFound;
 }
@@ -87,18 +87,15 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
     NodeT *pFound = NULL;
     if (p == NULL)
+        return NULL;
+    if (strcmp(p->element.szId,pkid->element.szId)==0)
         return pParent;
-    if (p == pkid)
-    {
-        return pParent;
-    }
-    else
-    {
-        if (p->pSibling !=NULL)
-            pFound = findParent(pParent,p->pSibling,pkid);
-        if (p->pChild != NULL)
-            findParent(p,p->pChild,pkid);
-    }
+    if (p->pSibling !=NULL)
+        pFound = findParent(pParent,p->pSibling,pkid);
+    if (pFound != NULL)
+        return pFound;
+    if (p->pChild != NULL)
+        pFound = findParent(p,p->pChild,pkid);
     return pFound;
 }
 
@@ -135,7 +132,7 @@ void printOne(Tree tree, char szId[])
     if (p == NULL)
         printf("PRINT ERROR: Id %s not found\n", szId);
     else
-        printf("Title: %s Cost: %lf\n"
+        printf("PRINT ONE:\n Title: %s Cost: %lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
 }
@@ -147,45 +144,75 @@ void printOne(Tree tree, char szId[])
     NodeT *p    Node that will be freed.
  Returns:
  
- Notes:
-     - DO NOT go to current node's sibling
-     - Check if it's NULL
-     - Free current Node's children
-     - Check children's children/sibling
-        . if NULL then free node and return.
- **************************************************************************/
+ **************************************************************************
 void freeSubTree(NodeT *p)
 {
-    
+
     if (p == NULL)
     {
         return;
     }
     
-    freeTree(p->pChild);
-    freeTree(p->pSibling);
-    free(p);
+    if (p->pChild == NULL && p->pSibling == NULL)
+    {
+        free(p);
+        return ;
+    }
+    
+    else if (p->pSibling != NULL)
+    {
+        freeTree(p->pSibling);
+        freeTree(p->pChild);
+        free(p);
+    }
+    
+    else
+    {
+        freeTree(p->pChild);
+        free(p);
+    }
     
 }
 
-/********************************* freeTree *******************************
+********************************* freeTree *******************************
  void freeTree(Tree tree)
  Purpose:
     Frees the whole tree.
  Parameters:
     I Tree tree     Tree that is being passed in for freeing.
  Returns:
- **************************************************************************/
+ **************************************************************************
 void freeTree(Tree tree)
 {
-    NodeT *p;
-    p = tree->pRoot;
+    NodeT *p = tree->pRoot;
     
-    freeSubTree(p);
-
+    if (p == NULL)
+    {
+        return;
+    }
+    
+    if (p->pChild == NULL && p->pSibling == NULL)
+    {
+        free(p);
+        return ;
+    }
+    
+    else if (p->pSibling != NULL)
+    {
+        freeTree(p->pSibling);
+        freeTree(p->pChild);
+        free(p);
+    }
+    
+    else
+    {
+        freeTree(p->pChild);
+        free(p);
+    }
+    
 }
 
-/************************** insertPriceMenu *******************************
+************************** insertPriceMenu *******************************
  void insertPriceMenu(Tree tree, Element element, char szParentId[])
  Purpose:
  
@@ -243,20 +270,9 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
  **************************************************************************/
 void deleteItem(Tree tree, char szId[])
 {
-    NodeT *p;
     
-    findParent(tree->pRoot, p, pKid);
+    //freeSubTree(
     
-    if (*p == pKid)
-    {
-        *p = pKid->pSibling;
-        pKid->pSibling = NULL;
-        freeSubTree(pKid);
-    }
-    else
-    {
-        
-    }
 }
 
 /**************************************************************************
@@ -296,22 +312,26 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         
         if (strcmp(szToken,"OPTION")==0)
         {
-            sscanf(pszInput, "%s %s %s"
+            sscanf(pszInput, "%s %s %[^\t\n]"
                    ,element.szId
                    ,szSubordinateToId
                    ,element.szTitle);
-            
+           printf("TITLE: %s\n",element.szTitle); 
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
                 if (tree->pRoot == NULL)
+                {
                     tree->pRoot = allocateNodeT(element);
-                else 
+                }
+                else
+                { 
                     tree->pRoot->pSibling = allocateNodeT(element);
+                }
             }
             else
             {
-                p = insertT(tree->pRoot->pChild,element,szSubordinateToId);
+                p = insertT(tree->pRoot,element,szSubordinateToId);
                 
                 //(error handling) if the parent node was not found
                 if (p == NULL)
@@ -320,14 +340,14 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         }
         else if (strcmp(szToken,"VALUE")==0)
         {
-            sscanf(pszInput, "%s %s %s %lf %s"
+            sscanf(pszInput, "%s %s %s %lf %[^\t\n]"
                    ,element.szId
                    ,szOptionId
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-            
-            p = insertT(tree->pRoot->pChild,element,szOptionId);
+            printf("VALUE TITLE: %s\n",element.szTitle);
+            p = insertT(tree->pRoot,element,szOptionId);
             
             //(error handling)if the parent node was not found
             if (p == NULL)
