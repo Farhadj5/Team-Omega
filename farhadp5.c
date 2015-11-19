@@ -183,6 +183,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         
         if (strcmp(szToken,"OPTION")==0)
         {
+            element.cNodeType = 'O';
             sscanf(pszInput, "%s %s %[^\t\n]"
                    ,element.szId
                    ,szSubordinateToId
@@ -210,6 +211,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         }
         else if (strcmp(szToken,"VALUE")==0)
         {
+            element.cNodeType = 'V';
             sscanf(pszInput, "%s %s %s %lf %[^\t\n]"
                    ,element.szId
                    ,szOptionId

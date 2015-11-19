@@ -27,13 +27,16 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     prettyPrintMenu(p->pSibling, iIndent);
     for (i = 0; i < iIndent; i++)
         printf("   ");
-    if (p->element.cCostInd == 0)
-        printf("  %-26s\n", p->element.szTitle);
-    else
+    if (p->element.cNodeType == 'V')
     {
-        printf("  %-26s",p->element.szTitle);
+        printf("  %-26s", p->element.szTitle);
         printf("\t%.2lf\n",p->element.dCost);
     }
+    else
+    {
+        printf("  %-26s\n",p->element.szTitle);
+    }
+
     prettyPrintMenu(p->pChild,iIndent+2);
 }
 /**************************************************************************
