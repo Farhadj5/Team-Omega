@@ -52,6 +52,7 @@
  **************************************************************************/
 NodeT *findId(NodeT *p, char szId[])
 {
+    NodeT *pFound = NULL;
     //base case
     if (p == NULL)
         return NULL;
@@ -61,9 +62,14 @@ NodeT *findId(NodeT *p, char szId[])
         return p;
 
     //iterate through the rest of the tree
-    findId(p->pChild, szId);
-    findId(p->pSibling, szId);
-    return NULL;
+    if (p->pSibling != NULL)
+        pFound = findId(p->pSibling, szId);
+    if (pFound != NULL)
+        return pFound;
+    if (p->pChild != NULL)
+        findId(p->pChild, szId);
+
+    return pFound;
 }
 
 /***************************** findParent *********************************
@@ -79,17 +85,21 @@ NodeT *findId(NodeT *p, char szId[])
  **************************************************************************/
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
+    NodeT *pFound = NULL;
     if (p == NULL)
-        return NULL;
-    if (strcmp(p->element.szId,pkid->element.szId) == 0)
-            return pParent;
-
-    if (p->pSibling != NULL)
-        pParent = findParent(pParent,p->pSibling,pkid);
-    if (p->pChild != NULL)
-        pParent = findParent(p,p->pChild,pkid);
-
-    return pParent;
+        return pParent;
+    if (p == pkid)
+    {
+        return pParent;
+    }
+    else
+    {
+        if (p->pSibling !=NULL)
+            pFound = findParent(pParent,p->pSibling,pkid);
+        if (p->pChild != NULL)
+            findParent(p,p->pChild,pkid);
+    }
+    return pFound;
 }
 
 /*************************** printPriceMenu *******************************
@@ -293,14 +303,19 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
-                tree->pRoot = allocateNodeT(element); //do we have to allocate here?
+            {
+                if (tree->pRoot == NULL)
+                    tree->pRoot = allocateNodeT(element);
+                else 
+                    tree->pRoot->pSibling = allocateNodeT(element);
+            }
             else
             {
-                p = insertT(tree->pRoot,element,szSubordinateToId);
+                p = insertT(tree->pRoot->pChild,element,szSubordinateToId);
                 
                 //(error handling) if the parent node was not found
                 if (p == NULL)
-                    printf("Error, parent %s not found", szSubordinateToId);
+                    printf("Error, parent %s not found\n", szSubordinateToId);
             }
         }
         else if (strcmp(szToken,"VALUE")==0)
@@ -312,7 +327,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.dCost
                    ,element.szTitle);
             
-            p = insertT(tree->pRoot,element,szOptionId);
+            p = insertT(tree->pRoot->pChild,element,szOptionId);
             
             //(error handling)if the parent node was not found
             if (p == NULL)

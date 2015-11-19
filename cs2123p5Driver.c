@@ -119,6 +119,7 @@ int main()
     NodeT *pKid = (NodeT *)malloc(sizeof(NodeT));
     printf("before strcpy\n");
     strcpy(pKid->element.szId,"bluePlus");
+    pParent = pKid;
     printf("before findparent %s\n",pKid->element.szId);
     pParent =findParent(NULL,tree->pRoot,pKid);
     if (pParent == NULL)
@@ -193,14 +194,14 @@ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
 
     if (p == NULL)
         return NULL;
-    //if child is not null, travers sibling chain until null is found
+    //if child is not null, traverses sibling chain until null is found
     if (p->pChild != NULL)
     {
-    p = p->pChild;
-    while (p->pSibling != NULL)
-        p = p->pSibling;
-    p->pSibling = allocateNodeT(value);
-    return p->pSibling;
+        p = p->pChild;
+        while (p->pSibling != NULL)
+            p = p->pSibling;
+        p->pSibling = allocateNodeT(value);
+        return p->pSibling;
     }
     //parent node is found and child is empty
     else
