@@ -24,7 +24,6 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     int i;
     if (p == NULL)
         return;
-    prettyPrintMenu(p->pSibling, iIndent);
     for (i = 0; i < iIndent; i++)
         printf("   ");
     if (p->element.cNodeType == 'V')
@@ -38,6 +37,8 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     }
 
     prettyPrintMenu(p->pChild,iIndent+2);
+    prettyPrintMenu(p->pSibling, iIndent);
+
 }
 /**************************************************************************
                              Main Functions
@@ -81,7 +82,7 @@ void printOne(Tree tree, char szId[])
     if (p == NULL)
         printf("PRINT ERROR: Id %s not found\n", szId);
     else
-        printf("PRINT ONE:\n Title: %s Cost: %lf\n"
+        printf("Title: %s\nCost: %.2lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
 }

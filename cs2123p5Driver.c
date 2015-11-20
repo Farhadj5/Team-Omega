@@ -117,10 +117,8 @@ int main()
     }
     NodeT *pParent  = (NodeT *)malloc(sizeof(NodeT));
     NodeT *pKid = (NodeT *)malloc(sizeof(NodeT));
-    printf("before strcpy\n");
-    strcpy(pKid->element.szId,"bluePlus");
+    strcpy(pKid->element.szId,"warrany1");
     pParent = pKid;
-    printf("before findparent %s\n",pKid->element.szId);
     pParent =findParent(NULL,tree->pRoot,pKid);
     if (pParent == NULL)
         printf("was null\n");
