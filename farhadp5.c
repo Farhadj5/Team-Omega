@@ -235,9 +235,10 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
         printf("DEFINE ERROR: parent %s not found\n", szParentId);
         return;
     }
-    if (p->element.cNodeType == 'V')
+    if (element.cNodeType == 'V' && p->element.cNodeType == 'V' )
     {
-        printf("DEFINE ERROR: Parent node %s is not an option node\n",szParentId);
+        printf("DEFINE ERROR: Inserting value node into a value node\n");
+        return;
     }
     insertT(tree->pRoot,element,szParentId);
 }
