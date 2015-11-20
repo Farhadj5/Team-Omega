@@ -27,9 +27,9 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     prettyPrintMenu(p->pChild, iIndent);
     for (i = 0; i < iIndent; i++)
         printf("   ");
-    if((strcmp(p->element.szID, "base") == 0) || //Formating improvement for Model Cat.
-       (strcmp(p->element.szID, "lx") == 0)   ||
-       (strcmp(p->element.szID, "oy") == 0))
+    if((strcmp(p->element.szId, "base") == 0) || //Formating improvement for Model Cat.
+       (strcmp(p->element.szId, "lx") == 0)   ||
+       (strcmp(p->element.szId, "oy") == 0))
     {
         printf("  %-26s", p->element.szTitle);
         printf("\t\t\t%.2lf\n",p->element.dCost);
