@@ -88,7 +88,7 @@ void printOne(Tree tree, char szId[])
     if (p == NULL)
         printf("PRINT ERROR: Id %s not found\n", szId);
     else
-        printf("Title: %s\nCost: %.2lf\n"
+        printf("\nTitle: %s\nCost: %.2lf\n"
                 ,p->element.szTitle
                 ,p->element.dCost);
 }
