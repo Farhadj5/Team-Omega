@@ -24,10 +24,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     int i;
     if (p == NULL)
         return;
-<<<<<<< HEAD
-=======
     prettyPrintMenu(p->pChild, iIndent);
->>>>>>> origin/master
     for (i = 0; i < iIndent; i++)
         printf("   ");
     if((strcmp(p->element.szID, "base") == 0) || //Formating improvement for Model Cat.
@@ -47,13 +44,8 @@ void prettyPrintMenu(NodeT *p, int iIndent)
         printf("  %-26s\n",p->element.szTitle);
     }
 
-<<<<<<< HEAD
     prettyPrintMenu(p->pChild,iIndent+2);
     prettyPrintMenu(p->pSibling, iIndent);
-
-=======
-    prettyPrintMenu(p->pSibling,iIndent+2);
->>>>>>> origin/master
 }
 /**************************************************************************
                              Main Functions
