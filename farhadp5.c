@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include "cs2123p5.h"
+
 /************************** determineQuote *******************************
  QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
  Purpose:
@@ -76,17 +82,89 @@ NodeT *findId(NodeT *p, char szId[])
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
     NodeT *pFound = NULL;
+    
+    //if tree passed in is NULL
     if (p == NULL)
         return NULL;
+
+    //pkid has been found
     if (strcmp(p->element.szId,pkid->element.szId)==0)
         return pParent;
+
+    //traverse sibling nodes
     if (p->pSibling !=NULL)
         pFound = findParent(pParent,p->pSibling,pkid);
+    
+    //pkid has been found so dont traverse through children
     if (pFound != NULL)
         return pFound;
+    
+    //traverse child nodes
     if (p->pChild != NULL)
         pFound = findParent(p,p->pChild,pkid);
+
+    //if found in child nodes, returns the found node, else it returns NULL
     return pFound;
+}
+
+/********************************* allocateNodeT *******************************
+ NodeT *allocateNodeT(Element value)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *allocateNodeT(Element value)
+{
+    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
+    pNew->element = value;
+    pNew->pChild = NULL;
+    pNew->pSibling = NULL;
+    return pNew;
+}
+
+/********************************* insertT *******************************
+ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+{
+    NodeT *p = findId(pRoot,szSubId);
+
+    if (p == NULL)
+        return NULL;
+    
+    //if child is not null, traverses sibling chain until null is found
+    if (p->pChild != NULL)
+    {
+        p = p->pChild;
+        while (p->pSibling != NULL)
+            p = p->pSibling;
+
+        //sticks node on the end of the sibling chain
+        p->pSibling = allocateNodeT(value);
+        return p->pSibling;
+    }
+
+    //parent node is found and child is empty
+    else
+    {
+        p->pChild = allocateNodeT(value);
+        return p->pChild;
+    }
+
+    return NULL;
 }
 
 /********************************* processCommand *******************************
@@ -121,46 +199,36 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         
         if (strcmp(szToken,"OPTION")==0)
         {
+            element.cNodeType = 'O';
             sscanf(pszInput, "%s %s %[^\t\n]"
                    ,element.szId
                    ,szSubordinateToId
                    ,element.szTitle);
-           printf("TITLE: %s\n",element.szTitle); 
+ 
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
+
                 if (tree->pRoot == NULL)
-                {
                     tree->pRoot = allocateNodeT(element);
-                }
                 else
-                { 
                     tree->pRoot->pSibling = allocateNodeT(element);
-                }
             }
             else
             {
-                p = insertT(tree->pRoot,element,szSubordinateToId);
-                
-                //(error handling) if the parent node was not found
-                if (p == NULL)
-                    printf("Error, parent %s not found\n", szSubordinateToId);
+                insertPriceMenu(tree,element,szSubordinateToId);
             }
         }
         else if (strcmp(szToken,"VALUE")==0)
         {
+            element.cNodeType = 'V';
             sscanf(pszInput, "%s %s %s %lf %[^\t\n]"
                    ,element.szId
                    ,szOptionId
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-            printf("VALUE TITLE: %s\n",element.szTitle);
-            p = insertT(tree->pRoot,element,szOptionId);
-            
-            //(error handling)if the parent node was not found
-            if (p == NULL)
-                printf("DEFINE ERROR: parent %s not found\n", szSubordinateToId);
+            insertPriceMenu(tree,element,szOptionId);
         }
     }
     else if (strcmp(szToken,"PRINT")==0)
@@ -171,7 +239,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"ALL")==0)
         {
             //Pretty print
-            prettyPrintT(tree->pRoot,0);
+            printPriceMenu(tree);
         }
         //if the command is print one
         else
@@ -205,8 +273,30 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             printf("DELETE ERROR: Id %s not found\n",szToken);
         else
         {
-            deleteItem(tree,szToken);
+            //deleteItem(tree,szToken);
         }
     }
     
+}
+
+void insertPriceMenu(Tree tree, Element element, char szParentId[])
+{
+    NodeT *p;
+    p = findId(tree->pRoot, element.szId);
+    if (p != NULL)
+    {
+        printf("DEFINE ERROR: %s already exists\n", element.szId);
+        return;
+    }
+    p = findId(tree->pRoot, szParentId);
+    if (p == NULL)
+    {
+        printf("DEFINE ERROR: parent %s not found\n", szParentId);
+        return;
+    }
+    if (p->element.cNodeType == 'V')
+    {
+        printf("DEFINE ERROR: Parent node %s is not an option node\n",szParentId);
+    }
+    insertT(tree->pRoot,element,szParentId);
 }

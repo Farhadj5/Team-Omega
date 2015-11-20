@@ -1,25 +1,3 @@
-/**********************************************************************
- cs2123p5.c by TEAM OMEGA [Farhad Jijina, Lane Burris, Joshua Weigand]
- 
- Purpose:
- 
- Command Parameters:
- 
- Input:
- 
- Results:
- 
- Returns:
- 
- Notes:
- 
- **********************************************************************/
-#include <stdio.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include "cs2123p5.h"
-
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
  Purpose:

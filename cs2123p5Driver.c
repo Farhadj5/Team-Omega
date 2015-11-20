@@ -117,10 +117,8 @@ int main()
     }
     NodeT *pParent  = (NodeT *)malloc(sizeof(NodeT));
     NodeT *pKid = (NodeT *)malloc(sizeof(NodeT));
-    printf("before strcpy\n");
-    strcpy(pKid->element.szId,"bluePlus");
+    strcpy(pKid->element.szId,"warrany1");
     pParent = pKid;
-    printf("before findparent %s\n",pKid->element.szId);
     pParent =findParent(NULL,tree->pRoot,pKid);
     if (pParent == NULL)
         printf("was null\n");
@@ -132,85 +130,6 @@ int main()
     fclose(stdin);
     printf("\n");
     return 0;
-}
-
-/********************************* prettyPrintT *******************************
- void prettyPrintT(NodeT *p, int iIndent)
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-void prettyPrintT(NodeT *p, int iIndent)
-{
-    int i;
-    if (p == NULL)
-        return;
-    prettyPrintT(p->pSibling, iIndent);
-    for (i = 0; i < iIndent; i++)
-        printf("   ");
-    printf("  %2s\n", p->element.szTitle);
-    prettyPrintT(p->pChild,iIndent+3);
-}
-
-/********************************* allocateNodeT *******************************
- NodeT *allocateNodeT(Element value)
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-NodeT *allocateNodeT(Element value)
-{
-    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
-    pNew->element = value;
-    pNew->pChild = NULL;
-    pNew->pSibling = NULL;
-    return pNew;
-}
-
-/********************************* insertT *******************************
- NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
-{
-    NodeT *p = findId(pRoot,szSubId);
-
-    if (p == NULL)
-        return NULL;
-    //if child is not null, traverses sibling chain until null is found
-    if (p->pChild != NULL)
-    {
-        p = p->pChild;
-        while (p->pSibling != NULL)
-            p = p->pSibling;
-        p->pSibling = allocateNodeT(value);
-        return p->pSibling;
-    }
-    //parent node is found and child is empty
-    else
-    {
-        p->pChild = allocateNodeT(value);
-        return p->pChild;
-    }
-    return NULL;
-
 }
 
 /******************** newTree **************************************
