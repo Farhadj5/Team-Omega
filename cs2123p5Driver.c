@@ -41,7 +41,7 @@ Input:
     QUOTE BEGIN 
         starts a quote selection.  determineQuote isn't called.
     QUOTE OPTION iLevel szOptionId iSelection
-    …
+    â€¦
     QUOTE END
         invokes determineQUote passing the quote selction information.
         Example:
@@ -139,11 +139,13 @@ Returns:
 /********************************* allocateNodeT *******************************
  NodeT *allocateNodeT(Element value)
  
- Purpose:
+ Purpose: to allocate memory for a new node
  
  Parameters:
+    Element value       the value we are inserting into the node
  
  Returns:
+    returns the allocated node
  
  **************************************************************************/
 
@@ -159,11 +161,15 @@ NodeT *allocateNodeT(Element value)
 /********************************* insertT *******************************
  NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
  
- Purpose:
+ Purpose: inserts an element into the tree
  
  Parameters:
- 
+    NodeT *pRoot
+    Element value
+    char szSubId[]
  Returns:
+    NULL doesnt work or tree is empty
+    returns newly created node.
  
  **************************************************************************/
 
