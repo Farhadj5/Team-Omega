@@ -16,13 +16,17 @@
  **************************************************************************/
 void freeSubTree(NodeT *p)
 {
+    // If pointer is at NULL, return the pointer we are on
     if (p == NULL)
     {
         return;
     }
     
+    // Recursively going through the children until NULL
     freeSubTree(p->pChild);
+    // Once you hit NULL from children, you go to the siblings
     freeSubTree(p->pSibling);
+    // Free the pointer it is currently on
     free(p);
     
 }
@@ -39,22 +43,27 @@ void freeTree(Tree tree)
 {
     
     NodeT *p;
+    // p is set to the pRoot
     p = tree->pRoot;
-    
+    // Recursing through the tree and freeing
     freeSubTree(p);
+    // Free tree for memory purposes
+    free(tree);
     
 }
 
 /********************************* deleteItem *******************************
+ // Still working on this function
  void deleteItem(Tree tree, char szId[])
  Purpose:
  Uses freeSubTree to free current node as well as the children of the current node.
  After freeSubTree is used, reconnects that sub-tree's sibiling to the parent, or to the other sub-tree's sibiling.
  Parameters:
  I/O Tree tree
+ I   char szId[]
  Returns:
  
- **************************************************************************/
+ **************************************************************************
 void deleteItem(Tree tree, char szId[])
 {
  /*   NodeT *p;
@@ -70,5 +79,5 @@ void deleteItem(Tree tree, char szId[])
     {
         
     }
-    */
-}
+    
+}*/
