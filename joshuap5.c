@@ -36,7 +36,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     else if (p->element.cNodeType == 'V')
     {
         printf("  %-26s", p->element.szTitle);
-        printf("\t%.2lf\n",p->element.dCost);
+        printf("\t\t%.2lf\n",p->element.dCost);
     }
     else
     {
