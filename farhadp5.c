@@ -61,6 +61,7 @@ NodeT *findId(NodeT *p, char szId[])
     //iterate through the rest of the tree
     if (p->pSibling != NULL)
         pFound = findId(p->pSibling, szId);
+    //if node has already been found, dont iterate through child nodes
     if (pFound != NULL)
         return pFound;
     if (p->pChild != NULL)
@@ -145,6 +146,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         
         if (strcmp(szToken,"OPTION")==0)
         {
+            //set node type to O for option
             element.cNodeType = 'O';
             sscanf(pszInput, "%s %s %[^\t\n]"
                    ,element.szId
@@ -154,12 +156,14 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
-
+                //if the root is currently empty, insert the element into root
                 if (tree->pRoot == NULL)
                     tree->pRoot = allocateNodeT(element);
+                //if there is already a value in root, insert the element into its sibling
                 else
                     tree->pRoot->pSibling = allocateNodeT(element);
             }
+            //if its not a root node, then call insertPriceMenu
             else
             {
                 insertPriceMenu(tree,element,szSubordinateToId);
@@ -174,6 +178,8 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
+                   
+            //handles errors and inserts element into tree
             insertPriceMenu(tree,element,szOptionId);
         }
     }
@@ -243,22 +249,32 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
 void insertPriceMenu(Tree tree, Element element, char szParentId[])
 {
     NodeT *p;
+    
     p = findId(tree->pRoot, element.szId);
+    
+    //if the node to be inserted already exists in the tree
     if (p != NULL)
     {
         printf("DEFINE ERROR: %s already exists\n", element.szId);
         return;
     }
+    
     p = findId(tree->pRoot, szParentId);
+    
+    //if the parent was not found
     if (p == NULL)
     {
         printf("DEFINE ERROR: parent %s not found\n", szParentId);
         return;
     }
+    
+    //if the a value node was being inserted into another value node
     if (element.cNodeType == 'V' && p->element.cNodeType == 'V' )
     {
         printf("DEFINE ERROR: Inserting value node into a value node\n");
         return;
     }
+    
+    //if no errors, insert into the tree using the recursive insertT function
     insertT(tree->pRoot,element,szParentId);
 }
