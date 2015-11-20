@@ -52,11 +52,11 @@ void prettyPrintMenu(NodeT *p, int iIndent)
 /*************************** printPriceMenu *******************************
  void printPriceMenu(Tree tree)
  Purpose:
- 
+    Prints the preliminary price menu at the beginning of the output
  Parameters:
- I      Tree Tree       
+ I      Tree Tree     Struct containing the Root and Nodes of a tree
  Returns:
- 
+ N/A
  **************************************************************************/
 void printPriceMenu(Tree tree)
 {
@@ -67,20 +67,20 @@ void printPriceMenu(Tree tree)
     printf("Price Menu\n");
 
     //Traverse the tree and print each nodes Title
-    prettyPrintMenu(pCurrentNode, 0); //Start indents = 1
+    prettyPrintMenu(pCurrentNode, 0); //Start indents = 0
 }
 
 /****************************** printOne **********************************
  void printOne(Tree tree, char szId[])
  Purpose:
-    Supposed to print only one part of the tree
-        - Title
-        - Cost
+    Prints specific attributes of a node.
+        -   szTitle
+        -   dCost
  Parameters:
  I      Tree tree       Struct containing the Root and Nodes of a tree
  IO     char szId[]     Element Identification
  Returns:
- 
+ N/A
 **************************************************************************/
 void printOne(Tree tree, char szId[])
 {
