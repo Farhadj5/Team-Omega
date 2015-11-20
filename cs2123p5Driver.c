@@ -115,18 +115,9 @@ int main()
         //read in file
         processCommand(tree, quoteSelection, szInputBuffer);
     }
-    NodeT *pParent  = (NodeT *)malloc(sizeof(NodeT));
-    NodeT *pKid = (NodeT *)malloc(sizeof(NodeT));
-    strcpy(pKid->element.szId,"warrany1");
-    pParent = pKid;
-    pParent =findParent(NULL,tree->pRoot,pKid);
-    if (pParent == NULL)
-        printf("was null\n");
-    else
-        printf("HERE: %s\n",pParent->element.szTitle);
     //Free the tree, quote selection and stdin
-    //freeTree(tree);
-    //free(quoteSelection);
+    freeTree(tree);
+    free(quoteSelection);
     fclose(stdin);
     printf("\n");
     return 0;
@@ -144,6 +135,66 @@ Returns:
     Returns a Tree.  Note that a Tree is simply a pointer to 
     a TreeImp. 
 **************************************************************************/
+
+/********************************* allocateNodeT *******************************
+ NodeT *allocateNodeT(Element value)
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *allocateNodeT(Element value)
+{
+    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
+    pNew->element = value;
+    pNew->pChild = NULL;
+    pNew->pSibling = NULL;
+    return pNew;
+}
+
+/********************************* insertT *******************************
+ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+ 
+ Purpose:
+ 
+ Parameters:
+ 
+ Returns:
+ 
+ **************************************************************************/
+
+NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
+{
+    NodeT *p = findId(pRoot,szSubId);
+
+    if (p == NULL)
+        return NULL;
+    
+    //if child is not null, traverses sibling chain until null is found
+    if (p->pChild != NULL)
+    {
+        p = p->pChild;
+        while (p->pSibling != NULL)
+            p = p->pSibling;
+
+        //sticks node on the end of the sibling chain
+        p->pSibling = allocateNodeT(value);
+        return p->pSibling;
+    }
+
+    //parent node is found and child is empty
+    else
+    {
+        p->pChild = allocateNodeT(value);
+        return p->pChild;
+    }
+
+    return NULL;
+}
 
 Tree newTree()
 {

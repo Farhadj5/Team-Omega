@@ -20,7 +20,7 @@
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
-    int i = 0;
+    /*int i = 0;
     QuoteResult quote;
     while (i <= quoteSelection->iQuoteItemCnt)
     {
@@ -33,6 +33,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
     }
     // QuoteResult is supposed to be dTotalCost;
     return quote; //only put here to prevent error messages
+    */
 }
 
 /******************************* findId ***********************************
@@ -105,66 +106,6 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 
     //if found in child nodes, returns the found node, else it returns NULL
     return pFound;
-}
-
-/********************************* allocateNodeT *******************************
- NodeT *allocateNodeT(Element value)
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-NodeT *allocateNodeT(Element value)
-{
-    NodeT *pNew = (NodeT *) malloc(sizeof(NodeT));
-    pNew->element = value;
-    pNew->pChild = NULL;
-    pNew->pSibling = NULL;
-    return pNew;
-}
-
-/********************************* insertT *******************************
- NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
- 
- Purpose:
- 
- Parameters:
- 
- Returns:
- 
- **************************************************************************/
-
-NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
-{
-    NodeT *p = findId(pRoot,szSubId);
-
-    if (p == NULL)
-        return NULL;
-    
-    //if child is not null, traverses sibling chain until null is found
-    if (p->pChild != NULL)
-    {
-        p = p->pChild;
-        while (p->pSibling != NULL)
-            p = p->pSibling;
-
-        //sticks node on the end of the sibling chain
-        p->pSibling = allocateNodeT(value);
-        return p->pSibling;
-    }
-
-    //parent node is found and child is empty
-    else
-    {
-        p->pChild = allocateNodeT(value);
-        return p->pChild;
-    }
-
-    return NULL;
 }
 
 /********************************* processCommand *******************************

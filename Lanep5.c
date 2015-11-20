@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include "cs2123p5.h"
+
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
  Purpose:
@@ -9,14 +15,13 @@
  **************************************************************************/
 void freeSubTree(NodeT *p)
 {
-    
     if (p == NULL)
     {
         return;
     }
     
-    freeTree(p->pChild);
-    freeTree(p->pSibling);
+    freeSubTree(p->pChild);
+    freeSubTree(p->pSibling);
     free(p);
     
 }
@@ -51,7 +56,7 @@ void freeTree(Tree tree)
  **************************************************************************/
 void deleteItem(Tree tree, char szId[])
 {
-    NodeT *p;
+ /*   NodeT *p;
     NodeT *pKid = findParent(NULL, p-pRoot, pKid);
     
     if (*p == pKid)
@@ -64,4 +69,5 @@ void deleteItem(Tree tree, char szId[])
     {
         
     }
+    */
 }
