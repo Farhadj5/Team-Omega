@@ -1,18 +1,9 @@
-<<<<<<< HEAD:lanep5.c
-<<<<<<< HEAD:lanep5.c
-
-=======
-=======
->>>>>>> origin/master:Lanep5.c
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include "cs2123p5.h"
-<<<<<<< HEAD:lanep5.c
->>>>>>> origin/master:Lanep5.c
-=======
->>>>>>> origin/master:Lanep5.c
+
 
 /****************************** freeSubTree *******************************
  void freeSubTree(NodeT *p)
