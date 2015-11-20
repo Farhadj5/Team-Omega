@@ -74,9 +74,9 @@ NodeT *findId(NodeT *p, char szId[])
  Purpose:
     Finds the parent of the child we are currently on.
  Parameters:
-    NodeT *pParent
-    NodeT *p
-    NodeT *pkid
+    NodeT *pParent                             parent of current node
+    NodeT *p                                   current node
+    NodeT *pkid                                node that we are searching for the parent of
  Returns:
     Returns that specified child's parent node.
  **************************************************************************/
@@ -111,11 +111,16 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 /********************************* processCommand *******************************
  void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
  
- Purpose:
+ Purpose: Reads the command and executes different lines based on the command
  
  Parameters:
  
+    Tree tree                                           tree
+    QuoteSelection quoteSelection                       quote
+    char *pszInput                                      line of input
+ 
  Returns:
+    n/a
  
  ********************************************************************************/
 void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
@@ -220,6 +225,21 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
     
 }
 
+/********************************* insertPriceMenu *******************************
+ void insertPriceMenu(Tree tree, Element element, char szParentId[])
+ 
+ Purpose: handles errors with the Define command
+ 
+ Parameters:
+ 
+    Tree tree                             tree
+    Element element                       element containing info
+    char szParentId[]                     parent to the node we are inserting
+ 
+ Returns:
+    n/a
+ 
+ ********************************************************************************/
 void insertPriceMenu(Tree tree, Element element, char szParentId[])
 {
     NodeT *p;
