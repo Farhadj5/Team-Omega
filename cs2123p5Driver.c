@@ -76,7 +76,6 @@ Results:
     Each command is also printed by this simple driver.
 Returns:
     0 - normal
-    ??
 Notes:
     1. This file contains a simple driver and some useful functions. 
     2. Project groups will create the rest of the driver in this same file.
@@ -136,6 +135,15 @@ Returns:
     a TreeImp. 
 **************************************************************************/
 
+Tree newTree()
+{
+    Tree tree = (Tree)malloc(sizeof(TreeImp));
+    if (tree == NULL)
+        ErrExit(ERR_ALGORITHM, "malloc allocation error for TreeImp");
+    tree->pRoot = NULL;
+    return tree;
+}
+
 /********************************* allocateNodeT *******************************
  NodeT *allocateNodeT(Element value)
  
@@ -175,6 +183,7 @@ NodeT *allocateNodeT(Element value)
 
 NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
 {
+    // p contains the root's ID
     NodeT *p = findId(pRoot,szSubId);
 
     if (p == NULL)
@@ -200,15 +209,6 @@ NodeT *insertT(NodeT *pRoot,Element value,char szSubId[])
     }
 
     return NULL;
-}
-
-Tree newTree()
-{
-    Tree tree = (Tree)malloc(sizeof(TreeImp));
-    if (tree == NULL)
-        ErrExit(ERR_ALGORITHM, "malloc allocation error for TreeImp");
-    tree->pRoot = NULL;
-    return tree;
 }
 
 /******************** newQuoteSelection **************************************
