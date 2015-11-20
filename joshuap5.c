@@ -24,10 +24,17 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     int i;
     if (p == NULL)
         return;
-    prettyPrintMenu(p->pSibling, iIndent);
+    prettyPrintMenu(p->pChild, iIndent);
     for (i = 0; i < iIndent; i++)
         printf("   ");
-    if (p->element.cNodeType == 'V')
+    if(p->element.szID == "base" || //Formating improvement for Model Cat.
+       p->element.szID == "lx"   ||
+       p->element.szID == "oy")
+    {
+        printf("  %-26s", p->element.szTitle);
+        printf("\t\t\t%.2lf\n",p->element.dCost);
+    }
+    else if (p->element.cNodeType == 'V')
     {
         printf("  %-26s", p->element.szTitle);
         printf("\t%.2lf\n",p->element.dCost);
@@ -37,7 +44,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
         printf("  %-26s\n",p->element.szTitle);
     }
 
-    prettyPrintMenu(p->pChild,iIndent+2);
+    prettyPrintMenu(p->pSibling,iIndent+2);
 }
 /**************************************************************************
                              Main Functions
@@ -47,7 +54,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
  Purpose:
  
  Parameters:
- 
+ I      Tree Tree       
  Returns:
  
  **************************************************************************/
