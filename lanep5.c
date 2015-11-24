@@ -63,13 +63,13 @@ void freeTree(Tree tree)
  I   char szId[]
  Returns:
  
- **************************************************************************
+ **************************************************************************/
 void deleteItem(Tree tree, char szId[])
 {
- /*   NodeT *p;
-    NodeT *pKid = findParent(NULL, p-pRoot, pKid);
+    NodeT *pKid = findId(pKid, szId); // Change what this declared to
+    NodeT *p  = findParent(NULL, tree->pRoot, pKid); // p is set to the parent
     
-    if (*p == pKid)
+    if (*p == *pKid)
     {
         *p = pKid->pSibling;
         pKid->pSibling = NULL;
@@ -77,7 +77,8 @@ void deleteItem(Tree tree, char szId[])
     }
     else
     {
+        *p = pKid->pSibling;
+        freeSubTree(&((*p)->pSibling));
         
     }
-    
-}*/
+}
