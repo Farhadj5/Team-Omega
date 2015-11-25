@@ -19,33 +19,32 @@
  Returns:
  N/A
  **************************************************************************/
-void prettyPrintPartial(NodeT *p, int iIndent)
+void prettyPrintMenu(NodeT *p, int iIndent)
 {
     int i;
     if (p == NULL)
         return;
     for (i = 0; i < iIndent; i++)
         printf("   ");
-    //Prints OPTION Cat.
-    if((strcmp(p->element.szId, "base") == 0) ||
+    if((strcmp(p->element.szId, "base") == 0) || //Formating improvement for Model Cat.
        (strcmp(p->element.szId, "lx") == 0)   ||
        (strcmp(p->element.szId, "oy") == 0))
     {
-        printf("       %-30s", p->element.szTitle);
+        printf("  %-26s", p->element.szTitle);
         printf("\t\t\t$%.2lf\n",p->element.dCost);
     }
-    else if((strcmp(p->element.szId, "warrany1") == 0)||
-            (strcmp(p->element.szId, "warrany2") == 0)||
-            (strcmp(p->element.szId, "warrany3") == 0))
+    else if (p->element.cNodeType == 'V')
     {
-        printf("       %-30s", p->element.szTitle);
+        printf("  %-26s", p->element.szTitle);
         printf("\t\t$%.2lf\n",p->element.dCost);
     }
-    else //Prints VALUE Cat.
+    else
     {
-        printf("\t       %-26s", p->element.szTitle);
-        printf("\t\t$%.2lf\n",p->element.dCost);
+        printf("  %-26s\n",p->element.szTitle);
     }
+
+    prettyPrintMenu(p->pChild,iIndent+2);
+    prettyPrintMenu(p->pSibling, iIndent);
 }
 
 /**************************** prettyPrintPartial **************************
@@ -73,13 +72,21 @@ void prettyPrintPartial(NodeT *p, int iIndent)
         printf("       %-30s", p->element.szTitle);
         printf("\t\t\t$%.2lf\n",p->element.dCost);
     }
-    else //Prints VALUE Cat.
+    //Prints Warranty Cat.
+    else if((strcmp(p->element.szId, "warrany1") == 0)||
+            (strcmp(p->element.szId, "warrany2") == 0)||
+            (strcmp(p->element.szId, "warrany3") == 0))
+    {
+        printf("       %-30s", p->element.szTitle);
+        printf("\t\t$%.2lf\n",p->element.dCost);
+    }
+    //Prints VALUE Cat.
+    else 
     {
         printf("\t       %-26s", p->element.szTitle);
         printf("\t\t$%.2lf\n",p->element.dCost);
     }
 }
-
 /**************************************************************************
                              Main Functions
  ***************************************************************************/
