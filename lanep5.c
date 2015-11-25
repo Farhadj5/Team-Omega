@@ -66,19 +66,39 @@ void freeTree(Tree tree)
  **************************************************************************/
 void deleteItem(Tree tree, char szId[])
 {
-    NodeT *pKid = findId(pKid, szId); // Change what this declared to
-    NodeT *p  = findParent(NULL, tree->pRoot, pKid); // p is set to the parent
+    NodeT *pKid = findId(tree->pRoot, szId); // The kid we are finding
+    NodeT *pParentLogical = findParent(NULL, tree->pRoot, pKid); // Logical parent of pKid
+    NodeT *pParentPhysical = pParentLogical->pChild; // pKid's parent
     
-    if (*p == *pKid)
+    // if parent equals kid, then delete it & reconnect
+    if (pParentLogical->pChild == pKid)
     {
-        *p = pKid->pSibling;
+        pParentPhysical= pKid->pSibling;
         pKid->pSibling = NULL;
         freeSubTree(pKid);
     }
-    else
+    //
+    else if (pParentPhysical->pSibling == pKid)
     {
-        *p = pKid->pSibling;
-        freeSubTree(&((*p)->pSibling));
+        pParentPhysical->pSibling = pKid->pSibling;
+        pKid->pSibling = NULL;
+        freeSubTree(pKid);
+    }
+    // Used for when you are deleting Model
+    else if (pParentLogical == NULL)
+    {
+        pParentPhysical = tree->pRoot;
+        pParentPhysical->pChild = pKid->pSibling;
+        pKid->pSibling = NULL;
+        freeSubTree(pKid);
         
     }
+    else
+    {
+        pParentPhysical = pParentPhysical->pSibling;
+        pParentPhysical->pSibling = NULL;
+        freeSubTree(pKid);
+        
+    }
+
 }
