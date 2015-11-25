@@ -20,20 +20,69 @@
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
-    /*int i = 0;
-    QuoteResult quote;
+    QuoteResult result;
+    NodeT *pRoot;
+    NodeT *pFind;
+    int i = 0;
+    int iCount;
+    double dTotal = 0;
+
     while (i <= quoteSelection->iQuoteItemCnt)
     {
-        NodeT *p = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
-        switch(quoteSelection->quoteItemM[i].iLevel)
+        int q = 1;
+        
+        if (quoteSelection->quoteItemM[i].szOptionId[0] == '\0')
+            return result;
+
+        if (quoteSelection->quoteItemM[i].iLevel == 0)
         {
+            //find the root node
+            pRoot = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
+            if (pRoot == NULL)
+            {
+                printf("Bad root value\n");
+                return result;
+            }
+            printf("%s\t",pRoot->element.szTitle);
+            pRoot = pRoot->pChild;
+            
+            while (q < quoteSelection->quoteItemM[i].iSelection)
+            {
+                pRoot = pRoot->pSibling;
+                q++;
+            }
+            printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
+            result.dTotalCost += pRoot->element.dCost;
 
         }
+        else if (quoteSelection->quoteItemM[i].iLevel == 1)
+        {
+            pFind = findId(pRoot->pChild,quoteSelection->quoteItemM[i].szOptionId);
+            if (pFind == NULL)
+            {
+                printf("Bad option value\n");
+                return result;
+            }
+            printf("%s\t",pFind->element.szTitle);
+            pFind = pFind->pChild;
 
+            while (q < quoteSelection->quoteItemM[i].iSelection)
+            {
+                if (pFind->pSibling == NULL)
+                {
+                    printf("\nBad value\n");
+                    return result;
+                }
+                pFind = pFind->pSibling;
+                q++;
+            }
+            iCount++;
+            printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
+            result.dTotalCost += pFind->element.dCost;
+        }
+        i++;
     }
-    // QuoteResult is supposed to be dTotalCost;
-    return quote; //only put here to prevent error messages
-    */
+    return result;
 }
 
 /******************************* findId ***********************************
@@ -61,7 +110,6 @@ NodeT *findId(NodeT *p, char szId[])
     //iterate through the rest of the tree
     if (p->pSibling != NULL)
         pFound = findId(p->pSibling, szId);
-    //if node has already been found, dont iterate through child nodes
     if (pFound != NULL)
         return pFound;
     if (p->pChild != NULL)
@@ -75,9 +123,9 @@ NodeT *findId(NodeT *p, char szId[])
  Purpose:
     Finds the parent of the child we are currently on.
  Parameters:
-    NodeT *pParent                             parent of current node
-    NodeT *p                                   current node
-    NodeT *pkid                                node that we are searching for the parent of
+    NodeT *pParent
+    NodeT *p
+    NodeT *pkid
  Returns:
     Returns that specified child's parent node.
  **************************************************************************/
@@ -112,16 +160,11 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 /********************************* processCommand *******************************
  void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
  
- Purpose: Reads the command and executes different lines based on the command
+ Purpose: to read input file and
  
  Parameters:
  
-    Tree tree                                           tree
-    QuoteSelection quoteSelection                       quote
-    char *pszInput                                      line of input
- 
  Returns:
-    n/a
  
  ********************************************************************************/
 void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
@@ -146,7 +189,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         
         if (strcmp(szToken,"OPTION")==0)
         {
-            //set node type to O for option
             element.cNodeType = 'O';
             sscanf(pszInput, "%s %s %[^\t\n]"
                    ,element.szId
@@ -156,14 +198,12 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             //check to see if it is root node
             if (strcmp(szSubordinateToId,"ROOT")==0)
             {
-                //if the root is currently empty, insert the element into root
+
                 if (tree->pRoot == NULL)
                     tree->pRoot = allocateNodeT(element);
-                //if there is already a value in root, insert the element into its sibling
                 else
                     tree->pRoot->pSibling = allocateNodeT(element);
             }
-            //if its not a root node, then call insertPriceMenu
             else
             {
                 insertPriceMenu(tree,element,szSubordinateToId);
@@ -178,8 +218,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-                   
-            //handles errors and inserts element into tree
             insertPriceMenu(tree,element,szOptionId);
         }
     }
@@ -206,7 +244,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         pszInput = getToken(pszInput,szToken,MAX_TOKEN_SIZE);
         if (strcmp(szToken,"BEGIN")==0)
         {
-            //idk
+            quoteSelection->iQuoteItemCnt = 0;
         }
         if (strcmp(szToken,"OPTION")==0)
         {
@@ -215,6 +253,10 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].szOptionId
                    ,&quoteSelection->quoteItemM[quoteSelection->iQuoteItemCnt].iSelection);
             quoteSelection->iQuoteItemCnt++;
+        }
+        if (strcmp(szToken,"END")==0)
+        {
+            determineQuote(tree,quoteSelection);
         }
     }
     else if (strcmp(szToken,"DELETE")==0)
@@ -231,50 +273,25 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
     
 }
 
-/********************************* insertPriceMenu *******************************
- void insertPriceMenu(Tree tree, Element element, char szParentId[])
- 
- Purpose: handles errors with the Define command
- 
- Parameters:
- 
-    Tree tree                             tree
-    Element element                       element containing info
-    char szParentId[]                     parent to the node we are inserting
- 
- Returns:
-    n/a
- 
- ********************************************************************************/
 void insertPriceMenu(Tree tree, Element element, char szParentId[])
 {
     NodeT *p;
-    
     p = findId(tree->pRoot, element.szId);
-    
-    //if the node to be inserted already exists in the tree
     if (p != NULL)
     {
         printf("DEFINE ERROR: %s already exists\n", element.szId);
         return;
     }
-    
     p = findId(tree->pRoot, szParentId);
-    
-    //if the parent was not found
     if (p == NULL)
     {
         printf("DEFINE ERROR: parent %s not found\n", szParentId);
         return;
     }
-    
-    //if the a value node was being inserted into another value node
     if (element.cNodeType == 'V' && p->element.cNodeType == 'V' )
     {
         printf("DEFINE ERROR: Inserting value node into a value node\n");
         return;
     }
-    
-    //if no errors, insert into the tree using the recursive insertT function
     insertT(tree->pRoot,element,szParentId);
 }
