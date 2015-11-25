@@ -19,32 +19,33 @@
  Returns:
  N/A
  **************************************************************************/
-void prettyPrintMenu(NodeT *p, int iIndent)
+void prettyPrintPartial(NodeT *p, int iIndent)
 {
     int i;
     if (p == NULL)
         return;
     for (i = 0; i < iIndent; i++)
         printf("   ");
-    if((strcmp(p->element.szId, "base") == 0) || //Formating improvement for Model Cat.
+    //Prints OPTION Cat.
+    if((strcmp(p->element.szId, "base") == 0) ||
        (strcmp(p->element.szId, "lx") == 0)   ||
        (strcmp(p->element.szId, "oy") == 0))
     {
-        printf("  %-26s", p->element.szTitle);
+        printf("       %-30s", p->element.szTitle);
         printf("\t\t\t$%.2lf\n",p->element.dCost);
     }
-    else if (p->element.cNodeType == 'V')
+    else if((strcmp(p->element.szId, "warrany1") == 0)||
+            (strcmp(p->element.szId, "warrany2") == 0)||
+            (strcmp(p->element.szId, "warrany3") == 0))
     {
-        printf("  %-26s", p->element.szTitle);
+        printf("       %-30s", p->element.szTitle);
         printf("\t\t$%.2lf\n",p->element.dCost);
     }
-    else
+    else //Prints VALUE Cat.
     {
-        printf("  %-26s\n",p->element.szTitle);
+        printf("\t       %-26s", p->element.szTitle);
+        printf("\t\t$%.2lf\n",p->element.dCost);
     }
-
-    prettyPrintMenu(p->pChild,iIndent+2);
-    prettyPrintMenu(p->pSibling, iIndent);
 }
 
 /**************************** prettyPrintPartial **************************
