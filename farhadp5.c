@@ -20,13 +20,18 @@
  **************************************************************************/
 QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 {
+    int bCheck;
+    QuoteSelection partial = newQuoteSelection();
     QuoteResult result;
     NodeT *pRoot;
     NodeT *pFind;
+    int iChildCnt = 0;
+    int iChildCnt2 = 0;
+    int iCount = 0;
     int i = 0;
-    int iCount;
     double dTotal = 0;
 
+    printf("\n");
     while (i <= quoteSelection->iQuoteItemCnt)
     {
         int q = 1;
@@ -36,11 +41,20 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 
         if (quoteSelection->quoteItemM[i].iLevel == 0)
         {
+            if (iChildCnt != 0) 
+            {
+                int h;
+                h = iChildCnt2 - iChildCnt;
+                printf("PARTIAL QUOTE: Missing %s", partial->quoteItemM[h].szOptionId);
+                result.error = partial->quoteItemM[h];
+                return result;
+            }
             //find the root node
             pRoot = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
             if (pRoot == NULL)
             {
                 printf("Bad root value\n");
+                result.error = quoteSelection->quoteItemM[i];
                 return result;
             }
             printf("%s\t",pRoot->element.szTitle);
@@ -51,6 +65,22 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 pRoot = pRoot->pSibling;
                 q++;
             }
+            if (pRoot->pChild != NULL)
+            {
+                bCheck = TRUE;
+                NodeT *pTemp = pRoot->pChild;
+                while (pTemp !=NULL)
+                {
+                    strcpy(partial->quoteItemM[iChildCnt].szOptionId, pTemp->element.szId);
+                    partial->quoteItemM[iChildCnt].iLevel = 1;
+                    pTemp = pTemp->pSibling;
+                    iChildCnt++;
+                    iChildCnt2++;
+                }
+
+            }
+            else
+                bCheck = FALSE;
             printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
             result.dTotalCost += pRoot->element.dCost;
 
@@ -63,7 +93,20 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 printf("Bad option value\n");
                 return result;
             }
+            if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)==0)
+            {
+                iChildCnt--;
+            }
+            else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
+            {
+                printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
+                result.error = partial->quoteItemM[iCount];
+                return result;
+
+            }
             printf("%s\t",pFind->element.szTitle);
+
+            
             pFind = pFind->pChild;
 
             while (q < quoteSelection->quoteItemM[i].iSelection)
@@ -76,9 +119,9 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 pFind = pFind->pSibling;
                 q++;
             }
-            iCount++;
             printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             result.dTotalCost += pFind->element.dCost;
+            iCount++;
         }
         i++;
     }
@@ -245,6 +288,7 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"BEGIN")==0)
         {
             quoteSelection->iQuoteItemCnt = 0;
+            memset(quoteSelection,0,sizeof(QuoteSelectionImp));
         }
         if (strcmp(szToken,"OPTION")==0)
         {
