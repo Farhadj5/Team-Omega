@@ -57,7 +57,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 result.error = quoteSelection->quoteItemM[i];
                 return result;
             }
-            printf("%s\t",pRoot->element.szTitle);
+            printf("   %s\n",pRoot->element.szTitle);
             pRoot = pRoot->pChild;
             
             while (q < quoteSelection->quoteItemM[i].iSelection)
@@ -82,6 +82,10 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             else
                 bCheck = FALSE;
             printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
+            
+            //Prints Partial/Full Quotes
+            prettyPrintPartial(pRoot,0);
+            //printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
             result.dTotalCost += pRoot->element.dCost;
 
         }
@@ -105,8 +109,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
 
             }
             printf("%s\t",pFind->element.szTitle);
-
-            
+            printf("           %s\n",pFind->element.szTitle);
             pFind = pFind->pChild;
 
             while (q < quoteSelection->quoteItemM[i].iSelection)
@@ -120,6 +123,11 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 q++;
             }
             printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
+            iCount++;
+            
+            //Prints Partial/Full Quotes
+            prettyPrintPartial(pFind,0);
+            //printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             result.dTotalCost += pFind->element.dCost;
             iCount++;
         }

@@ -46,6 +46,39 @@ void prettyPrintMenu(NodeT *p, int iIndent)
     prettyPrintMenu(p->pChild,iIndent+2);
     prettyPrintMenu(p->pSibling, iIndent);
 }
+
+/**************************** prettyPrintPartial **************************
+ void prettyPrintMenu(NodeT *p, int iIndent)
+ Purpose:
+ Prints Partial Quote(s) found in determineQuote
+ Parameters:
+ I      NodeT *p        Pointer directed to the root of the Tree
+ I      int Indent      Used to determine starting point of indented print
+ Returns:
+ N/A
+ **************************************************************************/
+void prettyPrintPartial(NodeT *p, int iIndent)
+{
+    int i;
+    if (p == NULL)
+        return;
+    for (i = 0; i < iIndent; i++)
+        printf("   ");
+    //Prints OPTION Cat.
+    if((strcmp(p->element.szId, "base") == 0) ||
+       (strcmp(p->element.szId, "lx") == 0)   ||
+       (strcmp(p->element.szId, "oy") == 0))
+    {
+        printf("       %-30s", p->element.szTitle);
+        printf("\t\t\t$%.2lf\n",p->element.dCost);
+    }
+    else //Prints VALUE Cat.
+    {
+        printf("\t       %-26s", p->element.szTitle);
+        printf("\t\t$%.2lf\n",p->element.dCost);
+    }
+}
+
 /**************************************************************************
                              Main Functions
  ***************************************************************************/
