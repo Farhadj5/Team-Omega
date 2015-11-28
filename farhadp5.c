@@ -106,7 +106,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 return result;
 
             }
-            printf("%s\t",pFind->element.szTitle);
+            //printf("%s\t",pFind->element.szTitle);
             printf("           %s\n",pFind->element.szTitle);
             pFind = pFind->pChild;
 
