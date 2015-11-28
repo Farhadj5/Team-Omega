@@ -81,11 +81,9 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             }
             else
                 bCheck = FALSE;
-            printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
-            
             //Prints Partial/Full Quotes
             prettyPrintPartial(pRoot,0);
-            //printf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
+            //Incrementation
             result.dTotalCost += pRoot->element.dCost;
 
         }
@@ -122,12 +120,11 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 pFind = pFind->pSibling;
                 q++;
             }
-            printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             iCount++;
             
             //Prints Partial/Full Quotes
             prettyPrintPartial(pFind,0);
-            //printf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
+            //Incementation
             result.dTotalCost += pFind->element.dCost;
             iCount++;
         }
