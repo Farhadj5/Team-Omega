@@ -71,18 +71,12 @@ void prettyPrintPartial(NodeT *p, QuoteSelection quoteSelection, int iIndent)
         printf("\t\t\t$%.2lf\n",p->element.dCost);
         quoteSelection->quoteItemM[i].iLevel++;
     }
-    //Prints Warranty Cat.
-    else if(quoteSelection->quoteItemM[i].iLevel == 1 ||
-            quoteSelection->quoteItemM[i].iLevel == 2 ||
-            quoteSelection->quoteItemM[i].iLevel == 3)
+    //Prints Everything Else
+    else
     {
         printf("               %-30s", p->element.szTitle);
         printf("\t\t$%.2lf\n",p->element.dCost);
         quoteSelection->quoteItemM[i].iLevel++;
-    }
-    else 
-    {
-        printf("\nError\n");
     }
 }
 /**************************************************************************
