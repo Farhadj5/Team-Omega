@@ -68,16 +68,16 @@ void deleteItem(Tree tree, char szId[])
 {
     NodeT *pKid = findId(tree->pRoot, szId); // The kid we are finding
     NodeT *pParentLogical = findParent(NULL, tree->pRoot, pKid); // Logical parent of pKid
-    NodeT *pParentPhysical = pParentLogical->pChild; // pKid's parent
+    NodeT *pParentPhysical = findParentPhysical(pParentLogical, pKid); // pKid's parent
     
-    // if parent equals kid, then delete it & reconnect
+    // If it has the same physical and logical parent
     if (pParentLogical->pChild == pKid)
     {
-        pParentPhysical= pKid->pSibling;
+        pParentPhysical = pKid->pSibling;
         pKid->pSibling = NULL;
         freeSubTree(pKid);
     }
-    //
+    // We're removing the middle of the three
     else if (pParentPhysical->pSibling == pKid)
     {
         pParentPhysical->pSibling = pKid->pSibling;
@@ -93,6 +93,7 @@ void deleteItem(Tree tree, char szId[])
         freeSubTree(pKid);
         
     }
+    // pKid doesn't have anymore siblings
     else
     {
         pParentPhysical = pParentPhysical->pSibling;
@@ -101,4 +102,22 @@ void deleteItem(Tree tree, char szId[])
         
     }
 
+}
+
+// physical parent
+
+NodeT *findParentPhysical(NodeT *pLogical, NodeT *pKid)
+{
+    NodeT *pTemp = pLogical->pChild;
+    
+    while (pTemp != NULL)
+    {
+        if (pTemp == pKid)
+            return pLogical;
+        if (pTemp->pSibling == pKid)
+            return pTemp;
+        else
+            pTemp = pTemp->pSibling;
+    }
+    return NULL;
 }

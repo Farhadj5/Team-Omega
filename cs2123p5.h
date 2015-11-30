@@ -145,6 +145,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection);
 void deleteItem(Tree tree, char szId[]);
 NodeT *allocateNodeT(Element value);
 NodeT *insertT(NodeT *pRoot,Element value,char szSubId[]);
+NodeT *findParentPhysical(NodeT *pParent, NodeT *pKid);
 
 // Driver function to process a input data line.  Groups must write this function
 void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[]);
