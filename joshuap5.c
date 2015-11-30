@@ -60,7 +60,6 @@ void prettyPrintMenu(NodeT *p, int iIndent)
 void prettyPrintPartial(NodeT *p, int iIndent)
 {
     int i;
-    int Current = quoteSelection->quoteItemM[i].iLevel;
     if (p == NULL)
         return;
     for (i = 0; i < iIndent; i++)
@@ -68,7 +67,6 @@ void prettyPrintPartial(NodeT *p, int iIndent)
     //Prints OPTION Cat.
     if(quoteSelection->quoteItemM[i].iLevel == 0)
     {
-        printf("Enters 0\n");
         printf("       %-30s", p->element.szTitle);
         printf("\t\t\t$%.2lf\n",p->element.dCost);
         quoteSelection->quoteItemM[i].iLevel++;
@@ -78,7 +76,6 @@ void prettyPrintPartial(NodeT *p, int iIndent)
             quoteSelection->quoteItemM[i].iLevel == 2 ||
             quoteSelection->quoteItemM[i].iLevel == 3)
     {
-        printf("Enters %d\n", Current);
         printf("               %-30s", p->element.szTitle);
         printf("\t\t$%.2lf\n",p->element.dCost);
         quoteSelection->quoteItemM[i].iLevel++;
