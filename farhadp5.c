@@ -66,14 +66,33 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 int h;
                 h = iChildCnt2 - iChildCnt;
                 printf("PARTIAL QUOTE: Missing %s", partial->quoteItemM[h].szOptionId);
+                result.returnCode = 1;
+                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[h];
                 return result;
+            }
+            int u=0;
+            while (u < i)
+            {
+                if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
+                {
+                    //too many arguments error
+                    printf("Duplicate Entry: %s\n"
+                            ,quoteSelection->quoteItemM[i].szOptionId);
+                    result.returnCode = 2;
+                    result.dTotalCost = dTotal;
+                    result.error = quoteSelection->quoteItemM[i];
+                    return result;
+                }
+                u++;
             }
             //find the root node
             pRoot = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
             if (pRoot == NULL)
             {
                 printf("Bad root value\n");
+                result.returnCode = 2;
+                result.dTotalCost = dTotal;
                 result.error = quoteSelection->quoteItemM[i];
                 return result;
             }
@@ -124,10 +143,29 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
         }
         else if (quoteSelection->quoteItemM[i].iLevel == 1)
         {
+            int u=0;
+            while (u < i)
+            {
+                if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
+                {
+                    //too many arguments error
+                    printf("Duplicate Entry: %s\n"
+                            ,quoteSelection->quoteItemM[i].szOptionId);
+                    result.returnCode = 2;
+                    result.dTotalCost = dTotal;
+                    result.error = quoteSelection->quoteItemM[i];
+                    return result;
+                }
+                u++;
+            }
+
             pFind = findId(pRoot->pChild,quoteSelection->quoteItemM[i].szOptionId);
             if (pFind == NULL)
             {
-                printf("Bad option value\n");
+                printf("Bad option value: %s\n", quoteSelection->quoteItemM[i].szOptionId);
+                result.returnCode = 2;
+                result.error = quoteSelection->quoteItemM[i];
+                result.dTotalCost = dTotal;
                 return result;
             }
             if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)==0)
@@ -137,6 +175,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
                 printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
+                result.returnCode = 1;
+                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[iCount];
                 return result;
 
@@ -150,7 +190,13 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             {
                 if (pFind->pSibling == NULL)
                 {
-                    printf("\nBad value\n");
+                    printf("\nBad Selection value: %s %d\n"
+                            ,quoteSelection->quoteItemM[i].szOptionId
+                            ,quoteSelection->quoteItemM[i].iSelection);
+                    result.error = quoteSelection->quoteItemM[i];
+                    result.dTotalCost = dTotal;
+                    result.returnCode = 3;
+
                     return result;
                 }
                 pFind = pFind->pSibling;
@@ -163,11 +209,29 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
         }
         else if (quoteSelection->quoteItemM[i].iLevel == 2)
         {
+            int u=0;
+            while (u < i)
+            {
+                if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
+                {
+                    //too many arguments error
+                    printf("Duplicate Entry: %s\n"
+                            ,quoteSelection->quoteItemM[i].szOptionId);
+                    result.returnCode = 2;
+                    result.dTotalCost = dTotal;
+                    result.error = quoteSelection->quoteItemM[i];
+                    return result;
+                }
+                u++;
+            }
 
             pFind = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
             if (pFind == NULL)
             {
                 printf("Bad option value\n");
+                result.returnCode = 2;
+                result.error = quoteSelection->quoteItemM[iCount];
+                result.dTotalCost = dTotal;
                 return result;
             }
             if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)==0)
@@ -177,6 +241,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
                 printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
+                result.returnCode = 1;
+                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[iCount];
                 return result;
 
@@ -189,7 +255,12 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             {
                 if (pFind->pSibling == NULL)
                 {
-                    printf("\nBad value\n");
+                    printf("\nBad Selection value: %s %d\n"
+                            ,quoteSelection->quoteItemM[i].szOptionId
+                            ,quoteSelection->quoteItemM[i].iSelection);
+                    result.error = quoteSelection->quoteItemM[i];
+                    result.dTotalCost = dTotal;
+                    result.returnCode = 3;
                     return result;
                 }
                 pFind = pFind->pSibling;
@@ -328,7 +399,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
             }
             else
             {
-                printf("BEFORE INSERT %s\n", element.szId);
                 insertPriceMenu(tree,element,szSubordinateToId);
             }
         }
