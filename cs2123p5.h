@@ -132,7 +132,7 @@ typedef struct
 
 // Prototypes of functions you must write.  Many of these functions
 // require helper functions to do the real work.
-void prettyPrintPartial(NodeT *p, int iIndent);
+void prettyPrintPartial(NodeT *p, QuoteSelection quoteSelection, int iIndent);
 void prettyPrintMenu(NodeT *p, int iIndent);
 NodeT *findId(NodeT *p, char szId[]);
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid);
