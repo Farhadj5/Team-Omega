@@ -59,8 +59,8 @@ void freeTree(Tree tree)
  Uses freeSubTree to free current node as well as the children of the current node.
  After freeSubTree is used, reconnects that sub-tree's sibiling to the parent, or to the other sub-tree's sibiling.
  Parameters:
- I/O Tree tree
- I   char szId[]
+ I/O Tree tree      Tree being traversed through.
+ I   char szId[]    ID being passed in to be looking for.
  Returns:
  
  **************************************************************************/
@@ -73,7 +73,11 @@ void deleteItem(Tree tree, char szId[])
     // If it has the same physical and logical parent
     if (pParentLogical->pChild == pKid)
     {
+<<<<<<< Updated upstream
         pParentLogical->pChild = pKid->pSibling;
+=======
+        pParentPhysical->pChild = pKid->pSibling;
+>>>>>>> Stashed changes
         pKid->pSibling = NULL;
         freeSubTree(pKid);
     }
@@ -104,16 +108,31 @@ void deleteItem(Tree tree, char szId[])
 
 }
 
-// physical parent
-
+/********************************* findParentPhysical *******************************
+ // Still working on this function
+ NodeT *findParentPhysical(NodeT *pLogical, NodeT *pKid)
+ Purpose:
+ 
+ Parameters:
+ I  NodeT *pLogical        The logical parent of pKid
+ I  NodeT *pKid            Node in the tree we are trying to find the physical parent of
+ Returns:
+    returns:
+        - pTemp     returned if the sibling of temp is kid, that means temp is the physical parent
+        - pLogical  returned if temp is kid, then the logical parent is the physical parent as well
+ ***********************************************************************************/
 NodeT *findParentPhysical(NodeT *pLogical, NodeT *pKid)
 {
+    // Made for a temp for physical parent
     NodeT *pTemp = pLogical->pChild;
     
+    // Traversing through the tree
     while (pTemp != NULL)
     {
+        // if temp is kid, then the logical parent is the physical parent as well
         if (pTemp == pKid)
             return pLogical;
+        // if the sibling of temp is kid, that means temp is the physical parent
         if (pTemp->pSibling == pKid)
             return pTemp;
         else
