@@ -48,7 +48,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
 }
 
 /**************************** prettyPrintPartial **************************
- void prettyPrintMenu(NodeT *p, int iIndent)
+ void prettyPrintMenu(NodeT *p, QuoteSelection quoteSelection, int iIndent)
  Purpose:
  Prints Partial Quote(s) found in determineQuote
  Parameters:
@@ -57,7 +57,7 @@ void prettyPrintMenu(NodeT *p, int iIndent)
  Returns:
  N/A
  **************************************************************************/
-void prettyPrintPartial(NodeT *p, int iIndent)
+void prettyPrintPartial(NodeT *p, QuoteSelection quoteSelection, int iIndent)
 {
     int i;
     if (p == NULL)
