@@ -133,4 +133,3 @@ void printOne(Tree tree, char szId[])
                 ,p->element.szTitle
                 ,p->element.dCost);
 }
-

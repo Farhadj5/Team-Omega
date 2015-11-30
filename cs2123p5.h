@@ -18,14 +18,12 @@ Purpose:
             QuoteSelectionImp
             QuoteSelection
             QuoteResult
-
  Protypes
         Functions provided by groups/individuals
         Functions provided only by groups
         Other functions provided by Larry
         Utility functions provided by Larry 
 Notes:
-
 **********************************************************************/
 
 /********* Constants *********/
@@ -64,7 +62,7 @@ typedef char Token[MAX_TOKEN_SIZE + 1];     // token type to help with parsing
 // An Element can be either an Option or an Option Value
 typedef struct
 {
-    char   cNodeType;		      // 'O' - option, 'V' - value
+    char   cNodeType;             // 'O' - option, 'V' - value
     char   szId[MAX_ID_SIZE + 1]; // unique ID for each node
     char   szTitle[30];           // title to display
     char   cCostInd;              // Y - it has a cost, N - it does not have a cost
@@ -134,6 +132,7 @@ typedef struct
 
 // Prototypes of functions you must write.  Many of these functions
 // require helper functions to do the real work.
+void prettyPrintPartial(NodeT *p, int iIndent);
 void prettyPrintMenu(NodeT *p, int iIndent);
 NodeT *findId(NodeT *p, char szId[]);
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid);

@@ -18,7 +18,6 @@ Input:
         Note:  if we are inserting at the root, the szSubordinateToId will be "ROOT".
         Print warnings (don't terminate) if the szId already exists or if the
         szSubordinateToId doesn't exist.
-
     DEFINE VALUE szId szOptionId cCostInd dCost szTitle
         where szId is the ID of this new node,
               szOptionId is the ID of the option which is its parent 
@@ -32,10 +31,8 @@ Input:
         Print warnings (don't terminate) if the szId already exists or if the 
         szOptionId doesn't exist.  If the node containing the szOptionId isn't 
         an OPTION, print a warning.
-
     PRINT ALL 
         prints the entire tree in a pretty print style (see sample output).
-
     PRINT ONE szId 
         prints one item 
     QUOTE BEGIN 
@@ -46,30 +43,27 @@ Input:
         invokes determineQUote passing the quote selction information.
         Example:
         QUOTE BEGIN
-        QUOTE OPTION 0 MODEL 1	// selected BASE
-        QUOTE OPTION 1 ENGINE_BASE 1	// selected 1.8-liter 4 Cyl Automatic
-        QUOTE OPTION 1 COLOR_BASE 2	// selected BLUE
-        QUOTE OPTION 1 AUDIO_BASE 2	// selected 8-TRK
-        QUOTE OPTION 0 WARRANTY 3	// selected 70k/5yr 
+        QUOTE OPTION 0 MODEL 1  // selected BASE
+        QUOTE OPTION 1 ENGINE_BASE 1    // selected 1.8-liter 4 Cyl Automatic
+        QUOTE OPTION 1 COLOR_BASE 2 // selected BLUE
+        QUOTE OPTION 1 AUDIO_BASE 2 // selected 8-TRK
+        QUOTE OPTION 0 WARRANTY 3   // selected 70k/5yr 
         QUOTE END
         It would print a quote:
-        MODEL     BASE				        17000
-        ENGINE    1.8-liter 4 Cyl Automatic 	0
+        MODEL     BASE                      17000
+        ENGINE    1.8-liter 4 Cyl Automatic     0
         COLOR     Blue                         50
         AUDIO     8-Track                    -100
         WARRANTY  70k/5yr                     900
         Total                               17850
-
-    DELETE szId	
+    DELETE szId 
         This causes the specified node to be deleted 
         from the tree.  As a result, its parent should no longer reference it.  
         It and its descendants must be freed.  Do not delete its immediate siblings.  
         For example, deleting the base should remove it from its parent's value chain, 
         but should not cause PLUS and OY to be deleted.   
         Print a warning if the szId doesn't already exist.
-
-    *	a comment in the data.  It is only used to explain the data.
-
+    *   a comment in the data.  It is only used to explain the data.
 Results:
     The commands cause a binary tree to be modified, printed or used to get 
     a prie quote.
@@ -317,16 +311,13 @@ void warning(char szFmt[], ... )
 Purpose:
     In general, this routine optionally prints error messages and diagnostics.
     It also prints usage information.
-
     If this is an argument error (iArg >= 0), it prints a formatted message 
     showing which argument was in error, the specified message, and
     supplemental diagnostic information.  It also shows the usage. It exits 
     with ERR_COMMAND_LINE.
-
     If this is a usage error (but not specific to the argument), it prints 
     the specific message and its supplemental diagnostic information.  It 
     also shows the usage and exist with ERR_COMMAND_LINE. 
-
     If this is just asking for usage (iArg will be -1), the usage is shown.
     It exits with USAGE_ONLY.
 Parameters:

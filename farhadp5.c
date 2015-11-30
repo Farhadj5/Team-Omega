@@ -57,7 +57,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 result.error = quoteSelection->quoteItemM[i];
                 return result;
             }
-            printf("   %s\n",pRoot->element.szTitle);
+            printf("  %s\n",pRoot->element.szTitle);
             pRoot = pRoot->pChild;
             
             while (q < quoteSelection->quoteItemM[i].iSelection)
@@ -81,9 +81,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             }
             else
                 bCheck = FALSE;
-            //Prints Partial/Full Quotes
+            //JOSHprintf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
             prettyPrintPartial(pRoot,0);
-            //Incrementation
             result.dTotalCost += pRoot->element.dCost;
 
         }
@@ -106,8 +105,9 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 return result;
 
             }
-            //printf("%s\t",pFind->element.szTitle);
+            //JOSHprintf("%s\t",pFind->element.szTitle);
             printf("           %s\n",pFind->element.szTitle);
+            
             pFind = pFind->pChild;
 
             while (q < quoteSelection->quoteItemM[i].iSelection)
@@ -120,11 +120,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 pFind = pFind->pSibling;
                 q++;
             }
-            iCount++;
-            
-            //Prints Partial/Full Quotes
+            //JOSHprintf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             prettyPrintPartial(pFind,0);
-            //Incementation
             result.dTotalCost += pFind->element.dCost;
             iCount++;
         }
@@ -293,7 +290,6 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         if (strcmp(szToken,"BEGIN")==0)
         {
             quoteSelection->iQuoteItemCnt = 0;
-            memset(quoteSelection,0,sizeof(QuoteSelectionImp));
         }
         if (strcmp(szToken,"OPTION")==0)
         {
