@@ -73,7 +73,7 @@ void deleteItem(Tree tree, char szId[])
     // If it has the same physical and logical parent
     if (pParentLogical->pChild == pKid)
     {
-        pParentPhysical = pKid->pSibling;
+        pParentLogical->pChild = pKid->pSibling;
         pKid->pSibling = NULL;
         freeSubTree(pKid);
     }

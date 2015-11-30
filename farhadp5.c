@@ -411,7 +411,10 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
                    ,&element.cCostInd
                    ,&element.dCost
                    ,element.szTitle);
-            insertPriceMenu(tree,element,szOptionId);
+            if (strcmp(szOptionId,"ROOT")==0)
+                printf("DEFINE ERROR: ROOT is not option\n");
+            else
+                insertPriceMenu(tree,element,szOptionId);
         }
     }
     else if (strcmp(szToken,"PRINT")==0)
@@ -484,6 +487,11 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
     if (element.cNodeType == 'V' && p->element.cNodeType == 'V' )
     {
         printf("DEFINE ERROR: Inserting value node into a value node\n");
+        return;
+    }
+    if (element.cNodeType == 'O' && p->element.cNodeType == 'O' )
+    {
+        printf("DEFINE ERROR: Inserting option node into a option node\n");
         return;
     }
     insertT(tree->pRoot,element,szParentId);
