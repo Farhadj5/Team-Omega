@@ -4,21 +4,42 @@
 #include <stdlib.h>
 #include "cs2123p5.h"
 
+/************************** traverseQuote *******************************
+ NodeT *traverseQuote(NodeT *p)
+ Purpose:
+        Traverses the tree in the quote looking for the level 2 option node
+ Parameters:
+        I NodeT *p                      starting node
+·
+ Returns:
+        p           found
+        temp        found and recursing
+        NULL        not found
+ **************************************************************************/
+
 NodeT *traverseQuote(NodeT *p)
 {
-    NodeT *temp=NULL;
+    NodeT *temp = NULL;
+
+    //if the quote is null
     if (p==NULL)
         return NULL;
+    
+    //If the option node is found
     if (p->element.cNodeType!='O')
     {
+        //traverse siblings if sibling is not null
         if (p->pSibling != NULL)
             temp = traverseQuote(p->pSibling);
+        //if node is found
         if (temp !=NULL)
             return temp;
+        //if node is not found through siblings, traverse the children
         if (p->pChild != NULL)
             temp = traverseQuote(p->pChild);
         return temp;
     }
+    //it is found
     else if (p->element.cNodeType=='O')
         return p;
     return NULL;
@@ -52,35 +73,42 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
     double dTotal = 0;
 
     printf("\n");
-    while (i <= quoteSelection->iQuoteItemCnt)
+    while (i < quoteSelection->iQuoteItemCnt)
     {
         int q = 1;
         
-        if (quoteSelection->quoteItemM[i].szOptionId[0] == '\0')
-            return result;
-
+        //level 0
         if (quoteSelection->quoteItemM[i].iLevel == 0)
         {
+            //check to see if partial
             if (iChildCnt != 0) 
             {
                 int h;
+                
+                //to find which node is missing
                 h = iChildCnt2 - iChildCnt;
-                printf("PARTIAL QUOTE: Missing %s", partial->quoteItemM[h].szOptionId);
+                
+                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
+                printf("PARTIAL QUOTE: Missing %s\n", partial->quoteItemM[h].szOptionId);
+                
+                //return code for partial
                 result.returnCode = 1;
-                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[h];
                 return result;
             }
+
+            //check for a duplicate entry
             int u=0;
             while (u < i)
             {
+
+                //if current quote is found to match any previous quotes
                 if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
                 {
                     //too many arguments error
                     printf("Duplicate Entry: %s\n"
                             ,quoteSelection->quoteItemM[i].szOptionId);
                     result.returnCode = 2;
-                    result.dTotalCost = dTotal;
                     result.error = quoteSelection->quoteItemM[i];
                     return result;
                 }
@@ -88,22 +116,28 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             }
             //find the root node
             pRoot = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
+            
+            //if root is not found
             if (pRoot == NULL)
             {
                 printf("Bad root value\n");
                 result.returnCode = 2;
-                result.dTotalCost = dTotal;
                 result.error = quoteSelection->quoteItemM[i];
                 return result;
             }
+
+            //print the title
             printf("  %s\n",pRoot->element.szTitle);
             pRoot = pRoot->pChild;
             
+            //find node for the selection
             while (q < quoteSelection->quoteItemM[i].iSelection)
             {
                 pRoot = pRoot->pSibling;
                 q++;
             }
+            
+            //record values to check for a partial quote
             if (pRoot->pChild != NULL)
             {
                 bCheck = TRUE;
@@ -112,6 +146,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 while (pTemp !=NULL)
                 {
                     strcpy(partial->quoteItemM[iChildCnt].szOptionId, pTemp->element.szId);
+                    
+                    //check for level 2 nodes
                     pCheck = traverseQuote(pTemp->pChild);
                     if (pCheck != NULL)
                     {
@@ -124,6 +160,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                         iChildCnt++;
                         iChildCnt2++;
                     }
+                    //not a level 2 node
                     else
                     {
                         partial->quoteItemM[iChildCnt].iLevel = 1;
@@ -136,13 +173,16 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             }
             else
                 bCheck = FALSE;
-            //JOSHprintf("%s\t\t%.2lf\n",pRoot->element.szTitle,pRoot->element.dCost);
+            
+            //print
             prettyPrintPartial(pRoot,quoteSelection,0);
             result.dTotalCost += pRoot->element.dCost;
 
         }
+        //level 1 nodes
         else if (quoteSelection->quoteItemM[i].iLevel == 1)
         {
+            //check for duplicates
             int u=0;
             while (u < i)
             {
@@ -160,6 +200,7 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             }
 
             pFind = findId(pRoot->pChild,quoteSelection->quoteItemM[i].szOptionId);
+            //check to see if the option was not found
             if (pFind == NULL)
             {
                 printf("Bad option value: %s\n", quoteSelection->quoteItemM[i].szOptionId);
@@ -168,24 +209,25 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 result.dTotalCost = dTotal;
                 return result;
             }
+            //reduce the child count if the node is in correct order. (partial checking)
             if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)==0)
             {
                 iChildCnt--;
             }
+            //if its not accounted for, then its a partial quote.
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
+                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
                 printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
                 result.returnCode = 1;
-                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[iCount];
                 return result;
 
             }
-            //JOSHprintf("%s\t",pFind->element.szTitle);
             printf("           %s\n",pFind->element.szTitle);
-            
             pFind = pFind->pChild;
 
+            //check to make sure selection value is not greater than # of nodes
             while (q < quoteSelection->quoteItemM[i].iSelection)
             {
                 if (pFind->pSibling == NULL)
@@ -196,19 +238,18 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                     result.error = quoteSelection->quoteItemM[i];
                     result.dTotalCost = dTotal;
                     result.returnCode = 3;
-
                     return result;
                 }
                 pFind = pFind->pSibling;
                 q++;
             }
-            //JOSHprintf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             prettyPrintPartial(pFind,quoteSelection,0);
             result.dTotalCost += pFind->element.dCost;
             iCount++;
         }
         else if (quoteSelection->quoteItemM[i].iLevel == 2)
         {
+            //check to see if duplicate
             int u=0;
             while (u < i)
             {
@@ -224,7 +265,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 }
                 u++;
             }
-
+    
+            //check to see if the option value was not found
             pFind = findId(tree->pRoot,quoteSelection->quoteItemM[i].szOptionId);
             if (pFind == NULL)
             {
@@ -234,23 +276,25 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 result.dTotalCost = dTotal;
                 return result;
             }
+            //reduce childcnt if the node is accounted for
             if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)==0)
             {
                 iChildCnt--;
             }
+            //if node is not accounted for, then it is a partial quote
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
+                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
                 printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
                 result.returnCode = 1;
-                result.dTotalCost = dTotal;
                 result.error = partial->quoteItemM[iCount];
                 return result;
 
             }
-            //JOSHprintf("%s\t",pFind->element.szTitle);
             printf("           %s\n",pFind->element.szTitle);
             pFind = pFind->pChild;
 
+            //check to see if selection value is too high 
             while (q < quoteSelection->quoteItemM[i].iSelection)
             {
                 if (pFind->pSibling == NULL)
@@ -259,22 +303,23 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                             ,quoteSelection->quoteItemM[i].szOptionId
                             ,quoteSelection->quoteItemM[i].iSelection);
                     result.error = quoteSelection->quoteItemM[i];
-                    result.dTotalCost = dTotal;
                     result.returnCode = 3;
                     return result;
                 }
                 pFind = pFind->pSibling;
                 q++;
             }
-            //JOSHprintf("%s\t\t%.2lf\n",pFind->element.szTitle,pFind->element.dCost);
             prettyPrintPartial(pFind,quoteSelection,0);
             result.dTotalCost += pFind->element.dCost;
             iCount++;
 
         }
 
+        //increment count
         i++;
     }
+    //print total
+    printf("\t\tTotal is \t\t\t\t$%.2lf\n",result.dTotalCost);
     return result;
 }
 
@@ -473,22 +518,27 @@ void insertPriceMenu(Tree tree, Element element, char szParentId[])
 {
     NodeT *p;
     p = findId(tree->pRoot, element.szId);
+    //the Id already exists
     if (p != NULL)
     {
         printf("DEFINE ERROR: %s already exists\n", element.szId);
         return;
     }
     p = findId(tree->pRoot, szParentId);
+    //parent was not found
     if (p == NULL)
     {
         printf("DEFINE ERROR: parent %s not found\n", szParentId);
         return;
     }
+
+    //value into a value
     if (element.cNodeType == 'V' && p->element.cNodeType == 'V' )
     {
         printf("DEFINE ERROR: Inserting value node into a value node\n");
         return;
     }
+    //option into an option
     if (element.cNodeType == 'O' && p->element.cNodeType == 'O' )
     {
         printf("DEFINE ERROR: Inserting option node into a option node\n");
