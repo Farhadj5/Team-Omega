@@ -88,8 +88,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 //to find which node is missing
                 h = iChildCnt2 - iChildCnt;
                 
-                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
-                printf("PARTIAL QUOTE: Missing %s\n", partial->quoteItemM[h].szOptionId);
+                //printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
+                //printf("PARTIAL QUOTE: Missing %s\n", partial->quoteItemM[h].szOptionId);
                 
                 //return code for partial
                 result.returnCode = 1;
@@ -106,8 +106,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
                 {
                     //too many arguments error
-                    printf("Duplicate Entry: %s\n"
-                            ,quoteSelection->quoteItemM[i].szOptionId);
                     result.returnCode = 2;
                     result.error = quoteSelection->quoteItemM[i];
                     return result;
@@ -120,7 +118,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             //if root is not found
             if (pRoot == NULL)
             {
-                printf("Bad root value\n");
                 result.returnCode = 2;
                 result.error = quoteSelection->quoteItemM[i];
                 return result;
@@ -189,8 +186,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
                 {
                     //too many arguments error
-                    printf("Duplicate Entry: %s\n"
-                            ,quoteSelection->quoteItemM[i].szOptionId);
                     result.returnCode = 2;
                     result.dTotalCost = dTotal;
                     result.error = quoteSelection->quoteItemM[i];
@@ -203,7 +198,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             //check to see if the option was not found
             if (pFind == NULL)
             {
-                printf("Bad option value: %s\n", quoteSelection->quoteItemM[i].szOptionId);
                 result.returnCode = 2;
                 result.error = quoteSelection->quoteItemM[i];
                 result.dTotalCost = dTotal;
@@ -217,8 +211,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             //if its not accounted for, then its a partial quote.
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
-                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
-                printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
                 result.returnCode = 1;
                 result.error = partial->quoteItemM[iCount];
                 return result;
@@ -232,9 +224,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             {
                 if (pFind->pSibling == NULL)
                 {
-                    printf("\nBad Selection value: %s %d\n"
-                            ,quoteSelection->quoteItemM[i].szOptionId
-                            ,quoteSelection->quoteItemM[i].iSelection);
                     result.error = quoteSelection->quoteItemM[i];
                     result.dTotalCost = dTotal;
                     result.returnCode = 3;
@@ -256,8 +245,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
                 if (strcmp(quoteSelection->quoteItemM[i].szOptionId,quoteSelection->quoteItemM[u].szOptionId)==0)
                 {
                     //too many arguments error
-                    printf("Duplicate Entry: %s\n"
-                            ,quoteSelection->quoteItemM[i].szOptionId);
                     result.returnCode = 2;
                     result.dTotalCost = dTotal;
                     result.error = quoteSelection->quoteItemM[i];
@@ -284,8 +271,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             //if node is not accounted for, then it is a partial quote
             else if (bCheck && strcmp(partial->quoteItemM[iCount].szOptionId,pFind->element.szId)!=0)
             {
-                printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
-                printf("PARTIAL QUOTE: missing %s", partial->quoteItemM[iCount].szOptionId);
                 result.returnCode = 1;
                 result.error = partial->quoteItemM[iCount];
                 return result;
@@ -299,9 +284,6 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
             {
                 if (pFind->pSibling == NULL)
                 {
-                    printf("\nBad Selection value: %s %d\n"
-                            ,quoteSelection->quoteItemM[i].szOptionId
-                            ,quoteSelection->quoteItemM[i].iSelection);
                     result.error = quoteSelection->quoteItemM[i];
                     result.returnCode = 3;
                     return result;
@@ -319,7 +301,8 @@ QuoteResult determineQuote(Tree tree, QuoteSelection quoteSelection)
         i++;
     }
     //print total
-    printf("\t\tTotal is \t\t\t\t$%.2lf\n",result.dTotalCost);
+    free(partial);
+    result.returnCode = 0;
     return result;
 }
 
@@ -497,7 +480,27 @@ void processCommand(Tree tree, QuoteSelection quoteSelection, char *pszInput)
         }
         if (strcmp(szToken,"END")==0)
         {
-            determineQuote(tree,quoteSelection);
+            QuoteResult result;
+            result = determineQuote(tree,quoteSelection);
+            switch (result.returnCode)
+            {
+                case 0:
+                    printf("\t\tTotal Cost \t\t\t\t$%.2lf\n",result.dTotalCost);
+                    break;
+                case 1:
+                    printf("\tPartial Total is \t\t\t\t$%.2lf\n",result.dTotalCost);
+                    printf("PARTIAL QUOTE: missing %s", result.error.szOptionId);
+                    break;
+                case 2:
+                    printf("Bad option value: %s\n"
+                            ,result.error.szOptionId);
+                    break;
+                case 3:
+                    printf("Bad Selection value: %s %d\n"
+                            ,result.error.szOptionId
+                            ,result.error.iSelection);
+                    break;
+            }
         }
     }
     else if (strcmp(szToken,"DELETE")==0)
